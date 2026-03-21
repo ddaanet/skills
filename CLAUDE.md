@@ -18,7 +18,7 @@ Skills power-user pour claude.ai/Desktop :
 | brief-fr / brief-en | FR / EN | Document de mission pour Claude Code |
 | passation / handoff | FR / EN | Résumé de fin de session |
 | tag-fr / tag-en | FR / EN | Marqueur de conversation |
-| relecture / proof | FR / EN | Validation structurée d'artefacts (à venir) |
+| relecture / proof | FR / EN | Validation structurée d'artefacts |
 
 ## Lignée
 
