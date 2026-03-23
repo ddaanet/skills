@@ -5,7 +5,7 @@
 Power-user skills for [claude.ai](https://claude.ai). Built for my own
 workflows, published because why not.
 
-These are [Agent Skills](https://www.agentskills.io/) — markdown
+These are [Agent Skills](https://agentskills.io) — markdown
 instructions that extend what Claude can do in a conversation. Each skill
 is a self-contained directory with a `SKILL.md` and optional reference
 files.
@@ -73,7 +73,7 @@ MIT
 Skills avancés pour [claude.ai](https://claude.ai). Construits pour mes
 propres workflows, publiés parce que pourquoi pas.
 
-Ce sont des [Agent Skills](https://www.agentskills.io/) — des
+Ce sont des [Agent Skills](https://agentskills.io) — des
 instructions markdown qui étendent les capacités de Claude dans une
 conversation. Chaque skill est un répertoire autonome avec un `SKILL.md`
 et des fichiers de référence optionnels.

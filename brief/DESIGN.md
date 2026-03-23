@@ -24,7 +24,7 @@ the Mix" 2025) shows:
 - Embedding non-target tokens into a prompt consistently degrades performance
 - Automated translation of prompts drops below 50% accuracy
 
-The Agent Skills standard (agentskills.io) provides no multilingual
+The Agent Skills standard (github.com/anthropics/skills) provides no multilingual
 description field. The description is displayed in UI before triggering —
 it must read naturally in the user's language.
 
