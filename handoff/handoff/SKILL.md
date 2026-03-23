@@ -13,13 +13,12 @@ description: >-
 Prepare a handoff document for continuing work in a new claude.ai
 conversation. Context transfer, not documentation.
 
-See `DESIGN.md` for design decisions.
+See `README.md` for design decisions.
 
-## When to use /handoff vs /brief vs /tag
+## When to use /handoff vs /brief
 
 - `/handoff` — targets a future conversation. Full session summary of ongoing work
 - `/brief` — targets Claude Code. Standalone mission document (the agent has no access to this conversation)
-- `/tag` — targets a future conversation. Lightweight marker (the conversation is the content)
 
 ## Invocation
 
@@ -92,7 +91,6 @@ End with a short note on the immediate next action.
 ## What the handoff does not do
 
 - Does not produce a mission document for Claude Code (→ `/brief`)
-- Does not place a conversation marker (→ `/tag`)
 - Does not handle transmission — the user copies the document by their
   preferred method
 

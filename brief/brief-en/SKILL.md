@@ -13,12 +13,11 @@ Produces a markdown file to hand off to a Claude Code agent. The brief exists
 because the target agent cannot read claude.ai conversations — a real
 isolation constraint.
 
-See `DESIGN.md` for design decisions.
+See `README.md` for design decisions.
 
-## When to use /brief vs /tag vs /handoff
+## When to use /brief vs /handoff
 
 - `/brief` — targets Claude Code. Produces a standalone document (the agent has no access to this conversation)
-- `/tag` — targets a future conversation. Lightweight marker (the conversation is the content)
 - `/handoff` — targets a future conversation. Overview summary to continue the work
 
 ## Invocation
@@ -94,6 +93,5 @@ Present the file via `present_files`. Remind the destination:
 ## What the brief does not do
 
 - Does not summarize the entire conversation (→ `/handoff`)
-- Does not place a conversation marker (→ `/tag`)
 - Does not handle transmission — the user copies the file by their
   preferred method (Desktop filesystem, manual copy, pasted into a prompt)

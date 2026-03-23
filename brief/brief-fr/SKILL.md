@@ -14,12 +14,11 @@ Produit un fichier markdown à transmettre à un agent Claude Code. Le brief
 existe parce que l'agent cible ne peut pas lire les conversations claude.ai —
 contrainte d'isolation réelle.
 
-Voir `DESIGN.md` pour les décisions de conception.
+Voir `README.md` pour les décisions de conception.
 
-## Quand utiliser /brief vs /tag vs /passation
+## Quand utiliser /brief vs /passation
 
 - `/brief` — cible Claude Code. Produit un document autonome (l'agent n'a pas accès à la conversation)
-- `/tag` — cible une conversation future. Marqueur léger (la conversation est le contenu)
 - `/passation` — cible une conversation future. Résumé d'ensemble pour continuer le travail
 
 ## Invocation
@@ -96,6 +95,5 @@ Présenter le fichier via `present_files`. Rappeler la destination :
 ## Ce que le brief ne fait pas
 
 - Ne résume pas la conversation entière (→ `/passation`)
-- Ne pose pas de marqueur dans la conversation (→ `/tag`)
 - Ne gère pas la transmission — l'utilisateur copie le fichier par le
   moyen de son choix (filesystem Desktop, copie manuelle, collé dans un prompt)

@@ -14,13 +14,12 @@ description: >-
 Prépare un document de passation pour continuer le travail dans une
 nouvelle conversation claude.ai. Transfert de contexte, pas documentation.
 
-Voir `DESIGN.md` pour les décisions de conception.
+Voir `README.md` pour les décisions de conception.
 
-## Quand utiliser /passation vs /brief vs /tag
+## Quand utiliser /passation vs /brief
 
 - `/passation` — cible une conversation future. Résumé d'ensemble du travail en cours
 - `/brief` — cible Claude Code. Document de mission autonome (l'agent n'a pas accès à la conversation)
-- `/tag` — cible une conversation future. Marqueur léger (la conversation est le contenu)
 
 ## Invocation
 
@@ -93,7 +92,6 @@ Terminer par une note courte sur la prochaine action immédiate.
 ## Ce que la passation ne fait pas
 
 - Ne produit pas un document de mission pour Claude Code (→ `/brief`)
-- Ne pose pas de marqueur dans la conversation (→ `/tag`)
 - Ne gère pas la transmission — l'utilisateur copie le document par le
   moyen de son choix
 

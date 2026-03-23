@@ -61,9 +61,9 @@ staging dans `.env.staging`.
 ## Exemple 2 : Travail de conception (skills)
 
 ```markdown
-# Passation : Conversion skills agent-core → claude.ai
+# Passation : Conversion skills agent-core vers claude.ai
 
-**État :** Skills brief-fr/brief-en terminés et installés. Passation et tag en cours de conception.
+**État :** Skills brief-fr/brief-en terminés et installés. Passation/handoff en cours de conception.
 
 ## Travail accompli
 
@@ -77,19 +77,12 @@ staging dans `.env.staging`.
 - DESIGN.md partagé documentant 7 décisions (D-1 à D-7)
 - Modèle de référence pour la co-écriture bilingue
 
-**Skill tag (prototype FR) :**
-- Marqueur léger `🏷️ libellé court` dans la conversation
-- Design épuré : zéro duplication de contenu, la conversation est le contenu
-
 ## En attente / Prochaines étapes
 
 - [ ] **Créer passation (FR) et handoff (EN)** (PRIORITÉ)
   - Réécriture native de conversation-handoff existant
   - Template et exemples dans chaque langue
   - DESIGN.md partagé
-
-- [ ] **Créer tag-en** (après passation)
-  - Réécriture native du tag-fr existant
 
 - [ ] **Installer les skills** dans `/mnt/skills/user/`
 
@@ -100,20 +93,16 @@ staging dans `.env.staging`.
 - Rationale : Cohérence avec le modèle i18n, refs en langue du skill
 - L'ancien skill reste en place jusqu'à l'installation des nouveaux
 
-**Section Énumération supprimée du tag :**
-- Décision : Pas de couplage tag → passation
-- Rationale : Passation lit déjà toute la conversation, les tags n'ajoutent rien
-
 ## Enseignements
 
-**Conversion ≠ portage :**
+**Conversion ne vaut pas portage :**
 - Découverte : Les contraintes claude.ai et Claude Code sont différentes, donc les solutions doivent l'être
-- Impact : brief existe parce que l'agent Code est isolé ; tag existe parce que conversation_search accède à tout
+- Impact : brief existe parce que l'agent Code est isolé de la conversation
 - Recommandation : Toujours partir des contraintes du contexte cible, pas de l'implémentation source
 
 ## Contexte pour la prochaine conversation
 
-Continuer la création des skills passation/handoff et tag-fr/tag-en.
+Continuer la création des skills passation/handoff.
 La méthodologie i18n est documentée dans `methodology-skill-i18n.md`.
 Le DESIGN.md de brief-fr sert de modèle pour les DESIGN.md des autres
 paires de skills.
