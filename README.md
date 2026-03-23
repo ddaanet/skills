@@ -1,5 +1,7 @@
 # Skills
 
+[Version française ci-dessous.](#skills-fr)
+
 Power-user skills for [claude.ai](https://claude.ai). Built for my own
 workflows, published because why not.
 
