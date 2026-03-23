@@ -17,6 +17,7 @@ Skills power-user pour claude.ai/Desktop :
 | bilingual-skill-creator | EN | Créer un skill en deux langues |
 | brief-fr / brief-en | FR / EN | Document de mission pour Claude Code |
 | passation / handoff | FR / EN | Résumé de fin de session |
+| preflight-fr / preflight-en | FR / EN | Validation pré-release (git, qualité, doc) |
 | tag-fr / tag-en | FR / EN | Marqueur de conversation |
 | relecture / proof | FR / EN | Validation structurée d'artefacts |
 
