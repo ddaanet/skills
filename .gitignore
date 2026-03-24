@@ -1,4 +1,4 @@
 .DS_Store
 dist/
 *.skill
-*/*/README.md
+skills/*/README.md

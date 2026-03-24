@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build all .skill files into dist/
 # A .skill is a zip containing the skill directory (SKILL.md + references/).
-# DESIGN.md lives at group level and is NOT included in the package.
+# DESIGN.md lives in design/<group>/ and is NOT included in the package.
 # For grouped skills, a README.md is generated at build time with a link
 # to the DESIGN.md on GitHub.
 #
@@ -14,22 +14,35 @@ DIST="dist"
 rm -rf "$DIST"
 mkdir -p "$DIST"
 
+# Skill → design-group mapping
+declare -A SKILL_GROUP=(
+  [brief-en]=brief
+  [brief-fr]=brief
+  [handoff]=handoff
+  [passation]=handoff
+  [preflight-en]=preflight
+  [preflight-fr]=preflight
+  [proof]=proof
+  [relecture]=proof
+  [bilingual-skill-creator]=bilingual-skill-creator
+)
+
 count=0
 
 while IFS= read -r skill_md; do
   skill_dir="$(dirname "$skill_md")"
   skill_name="$(basename "$skill_dir")"
   parent_dir="$(dirname "$skill_dir")"
-  group="$(basename "$parent_dir")"
   output="$DIST/${skill_name}.skill"
 
-  # Generate README.md for grouped skills (DESIGN.md is at group level)
-  if [ -f "$parent_dir/DESIGN.md" ] && [ "$parent_dir" != "." ]; then
+  # Generate README.md if skill belongs to a design group
+  group="${SKILL_GROUP[$skill_name]:-}"
+  if [ -n "$group" ] && [ -f "design/$group/DESIGN.md" ]; then
     cat > "$skill_dir/README.md" << EOF
 # $skill_name
 
 Part of [ddaanet/skills]($REPO_URL).
-Design decisions: [$group/DESIGN.md]($REPO_URL/blob/main/$group/DESIGN.md)
+Design decisions: [$group/DESIGN.md]($REPO_URL/blob/main/design/$group/DESIGN.md)
 EOF
   fi
 

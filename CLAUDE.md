@@ -1,39 +1,38 @@
-# Skills Repo — CLAUDE.md
+# ddaanet — CLAUDE.md
 
 ## Conventions
 
 - **Commits :** gitmoji, messages denses orientés "pourquoi pas quoi"
 - **Prose :** Opus uniquement. Qualité dense, pas de pipeline agent-core.
 - **Langues :** Chaque skill est monolingue. DESIGN.md partagés en anglais.
-- **Structure :** Paires bilingues groupées par concept (nom anglais).
-  DESIGN.md au niveau groupe (pas dans le package). README.md généré au
-  build avec lien GitHub vers le DESIGN.md. Skills standalone au niveau 1.
+- **Structure :** Skills dans `skills/`, DESIGN.md dans `design/<groupe>/`.
+  README.md généré au build avec lien GitHub vers le DESIGN.md.
+- **Plugin :** `ddaanet` — même repo sert de plugin Claude Code
+  (auto-découverte `skills/*/SKILL.md`) et de source pour les `.skill`
+  claude.ai (via `build.sh`).
 - **Remote git :** `github` (pas `origin`). `git push github main`.
 - **Build :** `./build.sh` pour générer les .skill dans `dist/`.
 
 ## Arborescence
 
 ```
-skills/
-  brief/                       # groupe
-    DESIGN.md                  # partagé, une seule copie
-    brief-en/SKILL.md
-    brief-fr/SKILL.md
-  handoff/                     # groupe
-    DESIGN.md
-    handoff/SKILL.md (+references/)
-    passation/SKILL.md (+references/)
-  preflight/                   # groupe
-    DESIGN.md
-    preflight-en/SKILL.md (+references/)
-    preflight-fr/SKILL.md (+references/)
-  proof/                       # groupe
-    DESIGN.md
-    proof/SKILL.md (+references/)
-    relecture/SKILL.md (+references/)
-  bilingual-skill-creator/     # standalone
-    DESIGN.md
-    SKILL.md
+.claude-plugin/plugin.json     # manifeste plugin Claude Code
+skills/                        # auto-découverte plugin
+  brief-en/SKILL.md
+  brief-fr/SKILL.md
+  handoff/SKILL.md (+references/)
+  passation/SKILL.md (+references/)
+  preflight-en/SKILL.md (+references/)
+  preflight-fr/SKILL.md (+references/)
+  proof/SKILL.md (+references/)
+  relecture/SKILL.md (+references/)
+  bilingual-skill-creator/SKILL.md
+design/                        # DESIGN.md par groupe (pas dans les packages)
+  brief/DESIGN.md
+  handoff/DESIGN.md
+  preflight/DESIGN.md
+  proof/DESIGN.md
+  bilingual-skill-creator/DESIGN.md
 ```
 
 ## Contenu
