@@ -1,7 +1,7 @@
 {
   "name": "ddaa-fr",
-  "version": "0.1.0",
-  "description": "Boîte à outils personnelle — skills de briefing et validation pré-release en français.",
+  "version": "0.1.1",
+  "description": "Boîte à outils personnelle — skills de briefing, validation pré-release, et relecture structurée en français.",
   "author": {
     "name": "David Allouche",
     "email": "david@ddaa.net"

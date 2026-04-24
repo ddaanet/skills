@@ -17,6 +17,7 @@ and builds `.skill` archives for claude.ai.
 |-------|--------|----------|--------------|
 | brief | ddaa, ddaa-fr | EN, FR | Mission document for Claude Code |
 | preflight | ddaa, ddaa-fr | EN, FR | Pre-release validation |
+| proof / relecture | ddaa, ddaa-fr | EN, FR | Structured item-by-item proofreading |
 | bilingual-skill-creator | ddaa | EN | Create a skill in two languages |
 
 Inside a plugin, invocation is `ddaa:brief`, `ddaa-fr:preflight`, etc.
@@ -73,16 +74,17 @@ suffixes into archive names: `brief-en.skill`, `brief-fr.skill`, etc.
 plugins/
   ddaa/                          # Claude Code plugin (EN)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,bilingual-skill-creator}/
+    skills/{brief,preflight,proof,bilingual-skill-creator}/
   ddaa-fr/                       # Claude Code plugin (FR)
     .claude-plugin/plugin.json
-    skills/{brief,preflight}/
+    skills/{brief,preflight,relecture}/
 skills/                          # claude.ai-only (outside plugin discovery)
   handoff/
   passation/
 design/                          # architecture decisions per group
   brief/DESIGN.md
   preflight/DESIGN.md
+  proof/DESIGN.md
   handoff/DESIGN.md
   bilingual-skill-creator/DESIGN.md
 build.sh                         # .skill builder for claude.ai
@@ -113,6 +115,7 @@ claude.ai.
 |-------|--------|--------|-----------|
 | brief | ddaa, ddaa-fr | EN, FR | Document de mission pour Claude Code |
 | preflight | ddaa, ddaa-fr | EN, FR | Validation pré-release |
+| proof / relecture | ddaa, ddaa-fr | EN, FR | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | ddaa | EN | Créer un skill en deux langues |
 
 Dans un plugin, l'invocation est `ddaa:brief`, `ddaa-fr:preflight`, etc.

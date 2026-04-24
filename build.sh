@@ -18,6 +18,8 @@ declare -A SKILL_GROUP=(
   [brief]=brief
   [preflight]=preflight
   [bilingual-skill-creator]=bilingual-skill-creator
+  [proof]=proof
+  [relecture]=proof
   [handoff]=handoff
   [passation]=handoff
 )
