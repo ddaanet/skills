@@ -1,5 +1,5 @@
 ---
-name: preflight-fr
+name: preflight
 description: >-
   Valide l'état git, lance les vérifications qualité, audite la documentation,
   et produit un verdict go/no-go avant de publier un package. Se déclenche sur

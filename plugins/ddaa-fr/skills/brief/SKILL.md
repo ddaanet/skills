@@ -1,5 +1,5 @@
 ---
-name: brief-fr
+name: brief
 description: >-
   Produire un document de mission pour Claude Code. Extraire decisions,
   contraintes et conclusions de la conversation courante. Se declenche sur
@@ -8,7 +8,7 @@ description: >-
   et l'execution dans Claude Code.
 ---
 
-# /brief-fr — Document de mission pour Claude Code
+# /brief — Document de mission pour Claude Code
 
 Produit un fichier markdown à transmettre à un agent Claude Code. Le brief
 existe parce que l'agent cible ne peut pas lire les conversations claude.ai —
