@@ -1,0 +1,10 @@
+{
+  "name": "ddaa",
+  "version": "0.1.0",
+  "description": "Personal toolbox — skills for briefing, preflight validation, and bilingual skill creation.",
+  "author": {
+    "name": "David Allouche",
+    "email": "david@ddaa.net"
+  },
+  "license": "MIT"
+}
