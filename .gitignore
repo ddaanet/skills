@@ -2,3 +2,17 @@
 dist/
 *.skill
 skills/*/README.md
+
+# Sandbox artifacts (host dotfiles mounted into the working tree as
+# character devices; they only show up in sandboxed sessions).
+# Exceptions: .claude/ (tracked tooling) and .gitmodules (submodules).
+.bash_profile
+.bashrc
+.gitconfig
+.idea
+.mcp.json
+.profile
+.ripgreprc
+.vscode
+.zprofile
+.zshrc
