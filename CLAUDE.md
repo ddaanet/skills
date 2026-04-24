@@ -5,45 +5,53 @@
 - **Commits :** gitmoji, messages denses orientés "pourquoi pas quoi"
 - **Prose :** Opus uniquement. Qualité dense, pas de pipeline agent-core.
 - **Langues :** Chaque skill est monolingue. DESIGN.md partagés en anglais.
-- **Structure :** Skills dans `skills/`, DESIGN.md dans `design/<groupe>/`.
-  README.md généré au build avec lien GitHub vers le DESIGN.md.
-- **Plugin :** `ddaanet` — même repo sert de plugin Claude Code
-  (auto-découverte `skills/*/SKILL.md`) et de source pour les `.skill`
-  claude.ai (via `build.sh`).
+- **Structure :** Skills dans `plugins/<plugin>/skills/` (Claude Code) ou
+  `skills/` (claude.ai uniquement). DESIGN.md dans `design/<groupe>/`,
+  README.md injecté au build avec lien GitHub vers le DESIGN.md.
+- **Plugins :** `ddaa` (EN, baseline) et `ddaa-fr` (FR) — sous-dossiers
+  de `plugins/`, auto-découverte `skills/*/SKILL.md` dans chacun. Le
+  repo racine n'est plus lui-même un plugin.
+- **Distribution claude.ai :** `build.sh` réécrit les noms avec suffixe
+  `-en` / `-fr` dans les archives `.skill` pour désambiguïser le
+  namespace plat de claude.ai. Les skills sous `skills/` (handoff,
+  passation) sont expédiés tels quels.
 - **Remote git :** `github` (pas `origin`). `git push github main`.
 - **Build :** `./build.sh` pour générer les .skill dans `dist/`.
 
 ## Arborescence
 
 ```
-.claude-plugin/plugin.json     # manifeste plugin Claude Code
-skills/                        # auto-découverte plugin
-  brief-en/SKILL.md
-  brief-fr/SKILL.md
-  handoff/SKILL.md (+references/)
-  passation/SKILL.md (+references/)
-  preflight-en/SKILL.md (+references/)
-  preflight-fr/SKILL.md (+references/)
-  proof/SKILL.md (+references/)
-  relecture/SKILL.md (+references/)
-  bilingual-skill-creator/SKILL.md
-design/                        # DESIGN.md par groupe (pas dans les packages)
+plugins/
+  ddaa/                          # plugin Claude Code — EN
+    .claude-plugin/plugin.json
+    skills/
+      brief/
+      preflight/
+      bilingual-skill-creator/
+  ddaa-fr/                       # plugin Claude Code — FR
+    .claude-plugin/plugin.json
+    skills/
+      brief/
+      preflight/
+skills/                          # claude.ai uniquement, hors plugin
+  handoff/
+  passation/
+design/                          # DESIGN.md par groupe (pas dans les packages)
   brief/DESIGN.md
-  handoff/DESIGN.md
   preflight/DESIGN.md
-  proof/DESIGN.md
+  handoff/DESIGN.md
   bilingual-skill-creator/DESIGN.md
+build.sh
 ```
 
 ## Contenu
 
-| Groupe | Skills | Description |
-|--------|--------|-------------|
-| brief | brief-fr, brief-en | Document de mission pour Claude Code |
-| handoff | passation, handoff | Résumé de fin de session |
-| preflight | preflight-fr, preflight-en | Validation pré-release |
-| proof | relecture, proof | Validation structurée d'artefacts |
-| (standalone) | bilingual-skill-creator | Créer un skill en deux langues |
+| Groupe | Skills | Plugin Claude Code | Description |
+|--------|--------|--------------------|-------------|
+| brief | brief (EN), brief (FR) | ddaa, ddaa-fr | Document de mission pour Claude Code |
+| preflight | preflight (EN), preflight (FR) | ddaa, ddaa-fr | Validation pré-release |
+| bilingual-skill-creator | bilingual-skill-creator | ddaa | Créer un skill en deux langues |
+| handoff | handoff (EN), passation (FR) | — (claude.ai seul) | Résumé de fin de session |
 
 ## Lignée
 
