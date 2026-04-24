@@ -1,4 +1,4 @@
-# Plugin split: ddaa-en / ddaa-fr
+# Plugin split: ddaa / ddaa-fr
 
 Date: 2026-04-24
 
@@ -8,8 +8,9 @@ The repo currently ships a single Claude Code plugin (`ddaa`) bundling
 nine skills across five design groups. A user interested in one command
 (e.g. `/brief`) must install the whole set. Splitting by language
 aligns with the project's "each skill is monolingual" principle and
-keeps install scope tight: an English user installs only `ddaa-en`, a
-French user only `ddaa-fr`.
+keeps install scope tight: English users install `ddaa`, French users
+install `ddaa-fr`. English is the baseline plugin and includes the
+bilingual skill creator; French is the localized variant.
 
 ## Scope changes
 
@@ -31,30 +32,31 @@ remains useful for plain claude.ai usage and Notion integration.
 
 **Kept and split across two plugins:**
 
-| Plugin   | Skills                                              |
-|----------|-----------------------------------------------------|
-| ddaa-en  | brief-en, preflight-en, bilingual-skill-creator     |
-| ddaa-fr  | brief-fr, preflight-fr                              |
+| Plugin   | Skills                                      | Invocations                                                      |
+|----------|---------------------------------------------|------------------------------------------------------------------|
+| ddaa     | brief, preflight, bilingual-skill-creator   | `ddaa:brief`, `ddaa:preflight`, `ddaa:bilingual-skill-creator`   |
+| ddaa-fr  | brief, preflight                            | `ddaa-fr:brief`, `ddaa-fr:preflight`                             |
 
-`bilingual-skill-creator` goes with EN: its frontmatter and body are
-English, and it is the factory used once per new bilingual pair.
+Inside each plugin the language is implicit from the plugin name; skill
+directories and frontmatter names drop the `-en`/`-fr` suffix. A
+given Claude Code project installs one plugin, not both.
 
 ## Repository layout
 
 ```
 plugins/
-  ddaa-en/
+  ddaa/
     .claude-plugin/plugin.json
     skills/
-      brief-en/
-      preflight-en/
+      brief/                       # was brief-en
+      preflight/                   # was preflight-en
       bilingual-skill-creator/
   ddaa-fr/
     .claude-plugin/plugin.json
     skills/
-      brief-fr/
-      preflight-fr/
-skills/                           # claude.ai-only, outside plugin discovery
+      brief/                       # was brief-fr
+      preflight/                   # was preflight-fr
+skills/                            # claude.ai-only, outside plugin discovery
   handoff/
   passation/
 design/
@@ -67,52 +69,70 @@ CLAUDE.md
 README.md
 ```
 
-The repo-root `.claude-plugin/` directory is removed — the repo is no
-longer itself a plugin. Each subdir under `plugins/` is a plugin root.
-Claude Code auto-discovery only sees `SKILL.md` files under a plugin's
-own tree, so `skills/handoff/` and `skills/passation/` at repo root are
-never installed as plugin skills.
+The repo-root `.claude-plugin/` is removed — the repo is no longer
+itself a plugin. Claude Code auto-discovery only sees `SKILL.md` under
+a plugin's own tree, so `skills/handoff/` and `skills/passation/` at
+repo root are never installed as plugin skills.
 
 ## Plugin manifests
 
-Both `plugins/ddaa-en/.claude-plugin/plugin.json` and
+`plugins/ddaa/.claude-plugin/plugin.json` and
 `plugins/ddaa-fr/.claude-plugin/plugin.json` follow the existing
-`ddaa` manifest shape (name, version, description, author, license).
+manifest shape (name, version, description, author, license).
 Descriptions are written in each plugin's target language.
 
-## build.sh
+## claude.ai `.skill` distribution
 
-- `SKILL_GROUP` map: drop the `proof` and `relecture` entries. The
-  remaining seven stay: handoff, passation, brief-en, brief-fr,
-  preflight-en, preflight-fr, bilingual-skill-creator.
-- Detection is unchanged: `find . -name SKILL.md -not -path './dist/*'`
-  still finds every skill wherever it lives in the tree. Skills under
-  `plugins/*/skills/` and `skills/` are all picked up and built into
-  `dist/*.skill`.
-- The generated `README.md` stub (linking to `design/<group>/DESIGN.md`
-  on GitHub) continues to work: `DESIGN.md` stays at repo root, and
-  the link URL is computed from the group name, not the skill's
-  filesystem path.
+claude.ai has a flat, non-namespaced skill list, so the collision of
+two skills both named `brief` has to be resolved at the archive level.
+A user of claude.ai may install both EN and FR versions simultaneously.
+
+`build.sh` handles disambiguation:
+
+- For each skill under `plugins/ddaa/skills/*`: the archive is
+  `<name>-en.skill`, the internal top-level directory is renamed to
+  `<name>-en/`, and the `SKILL.md` frontmatter `name:` field is
+  rewritten to `<name>-en`. (`brief` → `brief-en`, `preflight` →
+  `preflight-en`, `bilingual-skill-creator` →
+  `bilingual-skill-creator-en`.)
+- For each skill under `plugins/ddaa-fr/skills/*`: same with `-fr`.
+- For each skill under `skills/*` (handoff, passation): shipped as-is,
+  no rewrite — names are already unambiguous.
+
+The rewrite is done on a copy in a temp dir, zipped, and discarded —
+source files are untouched.
+
+### SKILL_GROUP map
+
+Keyed by short skill name, used to look up the DESIGN.md link in the
+generated `README.md` stub:
+
+- `brief` → `brief`
+- `preflight` → `preflight`
+- `bilingual-skill-creator` → `bilingual-skill-creator`
+- `handoff` → `handoff`
+- `passation` → `handoff`
 
 ## Marketplace (separate repo `ddaanet/claude-plugins`)
 
-Replace the single `ddaa` entry with two entries. Each uses
-`source.path` to point into the subdir:
+Replace the single `ddaa` entry with two entries, each pointing into a
+subdir of this repo via `source.path`:
 
 ```json
 {
-  "name": "ddaa-en",
+  "name": "ddaa",
   "source": {
     "source": "github",
     "repo": "ddaanet/skills",
-    "path": "plugins/ddaa-en"
+    "path": "plugins/ddaa"
   },
-  "description": "Bilingual skills (EN) — brief, preflight, skill creator.",
+  "description": "Skills — brief, preflight, skill creator.",
   ...
 }
 ```
 
-(and analogous for `ddaa-fr`, with a French description).
+(and analogous `ddaa-fr` with a French description and
+`path: "plugins/ddaa-fr"`).
 
 ## Docs
 
