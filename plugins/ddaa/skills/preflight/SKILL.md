@@ -1,5 +1,5 @@
 ---
-name: preflight-en
+name: preflight
 description: >-
   Validates git state, runs quality checks, audits documentation, and produces
   a go/no-go readiness report before releasing a package. Triggers on

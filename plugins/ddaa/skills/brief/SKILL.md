@@ -1,5 +1,5 @@
 ---
-name: brief-en
+name: brief
 description: >-
   Produce a mission document for Claude Code. Extract decisions, constraints
   and conclusions from the current conversation. Triggers on "/brief",
@@ -7,7 +7,7 @@ description: >-
   Use when design happens in claude.ai and execution in Claude Code.
 ---
 
-# /brief-en — Mission Document for Claude Code
+# /brief — Mission Document for Claude Code
 
 Produces a markdown file to hand off to a Claude Code agent. The brief exists
 because the target agent cannot read claude.ai conversations — a real
