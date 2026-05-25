@@ -19,6 +19,7 @@ and builds `.skill` archives for claude.ai.
 | preflight | ddaa, ddaa-fr | EN, FR | Pre-release validation |
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Structured item-by-item proofreading |
 | bilingual-skill-creator | ddaa | EN | Create a skill in two languages |
+| bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Bank statements into a double-entry CSV ledger |
 
 Inside a plugin, invocation is `ddaa:brief`, `ddaa-fr:preflight`, etc.
 A given Claude Code project installs one plugin, not both.
@@ -74,10 +75,10 @@ suffixes into archive names: `brief-en.skill`, `brief-fr.skill`, etc.
 plugins/
   ddaa/                          # Claude Code plugin (EN)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,proof,bilingual-skill-creator}/
+    skills/{brief,preflight,proof,bilingual-skill-creator,bookkeeping}/
   ddaa-fr/                       # Claude Code plugin (FR)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,relecture}/
+    skills/{brief,preflight,relecture,saisie-comptable}/
 skills/                          # claude.ai-only (outside plugin discovery)
   handoff/
   passation/
@@ -87,6 +88,7 @@ design/                          # architecture decisions per group
   proof/DESIGN.md
   handoff/DESIGN.md
   bilingual-skill-creator/DESIGN.md
+  bookkeeping/DESIGN.md
 build.sh                         # .skill builder for claude.ai
 ```
 
@@ -117,6 +119,7 @@ claude.ai.
 | preflight | ddaa, ddaa-fr | EN, FR | Validation pré-release |
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | ddaa | EN | Créer un skill en deux langues |
+| bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Relevés bancaires dans un grand-livre CSV |
 
 Dans un plugin, l'invocation est `ddaa:brief`, `ddaa-fr:preflight`, etc.
 Un projet Claude Code donné installe un plugin, pas les deux.
