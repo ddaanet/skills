@@ -29,12 +29,14 @@ plugins/
       preflight/
       proof/
       bilingual-skill-creator/
+      bookkeeping/
   ddaa-fr/                       # plugin Claude Code — FR
     .claude-plugin/plugin.json
     skills/
       brief/
       preflight/
       relecture/
+      saisie-comptable/
 skills/                          # claude.ai uniquement, hors plugin
   handoff/
   passation/
@@ -44,6 +46,7 @@ design/                          # DESIGN.md par groupe (pas dans les packages)
   proof/DESIGN.md
   handoff/DESIGN.md
   bilingual-skill-creator/DESIGN.md
+  bookkeeping/DESIGN.md
 build.sh
 ```
 
@@ -55,6 +58,7 @@ build.sh
 | preflight | preflight (EN), preflight (FR) | ddaa, ddaa-fr | Validation pré-release |
 | proof | proof (EN), relecture (FR) | ddaa, ddaa-fr | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | bilingual-skill-creator | ddaa | Créer un skill en deux langues |
+| bookkeeping | bookkeeping (EN), saisie-comptable (FR) | ddaa, ddaa-fr | Intégrer relevés bancaires dans grand-livre CSV |
 | handoff | handoff (EN), passation (FR) | — (claude.ai seul) | Résumé de fin de session |
 
 ## Lignée

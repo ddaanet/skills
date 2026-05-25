@@ -22,6 +22,8 @@ declare -A SKILL_GROUP=(
   [relecture]=proof
   [handoff]=handoff
   [passation]=handoff
+  [bookkeeping]=bookkeeping
+  [saisie-comptable]=bookkeeping
 )
 
 stage_root="$(mktemp -d)"
