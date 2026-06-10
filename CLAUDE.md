@@ -18,6 +18,14 @@
   suffixe.
 - **Remote git :** `github` (pas `origin`). `git push github main`.
 - **Build :** `./build.sh` pour générer les .skill dans `dist/`.
+- **Release :** `just release [patch|minor|major]`. `ddaa` et `ddaa-fr`
+  sont versionnés en **lockstep** (même version, tag unique `vX.Y.Z`). La
+  recette bompe les deux manifests, tague, pousse, crée la GitHub release,
+  puis bompe les deux entrées du marketplace (`../claude-plugins`, ou
+  `MARKETPLACE_DIR`) et le pousse. **Ne jamais éditer `.version` à la
+  main** — un hook `version-guard` (PreToolUse) le refuse ; la recette est
+  le seul chemin. Adaptée de `claude-plugin-dev` mais non vendorée (une
+  seule occurrence ne justifie pas de généraliser le toolkit).
 
 ## Arborescence
 
