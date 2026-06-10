@@ -3,5 +3,18 @@
     "superpowers@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/version-guard.sh\""
+          }
+        ]
+      }
+    ]
   }
 }
