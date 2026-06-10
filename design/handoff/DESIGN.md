@@ -93,3 +93,43 @@ across sessions and feed into `/codify` for consolidation. In claude.ai,
 there is no persistent `learnings.md` across conversations. Separating them
 would create a file with no consumer. Inline keeps everything in one
 copyable document.
+
+## D-7: Notion-first delivery (amends D-4)
+
+**Chosen:** When a Notion workspace is connected, the handoff is written as
+a Notion page and the skill returns only a `[Title](url)` link. The
+`present_files` artifact (D-4) becomes the fallback for claude.ai without
+Notion.
+
+**Reason:** This is what makes the skill useful in Claude Code: a hybrid
+project where Claude Code cooperates with claude.ai stores its handoffs in
+Notion, where a claude.ai conversation can pick them up. A local file or
+`present_files` artifact has no consumer in that workflow. Provenance: the
+"Correctifs passation" backlog in David's Notion workspace.
+
+**Sub-decisions, all from that backlog:**
+
+- **No double generation.** Once the handoff is on Notion, do not also emit
+  a local file or `present_files` — Notion is the source of truth, and a
+  second copy creates an ambiguous one. Return only the link.
+- **Reverse-chrono positioning.** `notion-create-pages` appends to the end
+  of the parent; the wanted order is most-recent-on-top. Reposition with
+  `notion-update-page` command=`replace_content`, re-listing the parent's
+  full set of `<page>` blocks with their one-line summaries. Surgically
+  deleting a `<page>` block via `update_content` trashes the child page —
+  this is the reliable pattern, learned the hard way in the candidature
+  workflow. Both skills carry the warning so the lesson is not re-paid.
+- **End-of-session triggers.** "fin"/"au revoir" (FR), "end"/"goodbye" (EN)
+  fire the handoff without asking for confirmation — the user closing the
+  session wants it cut cleanly, not a yes/no round-trip.
+- **Current-session title.** After delivery, suggest the title of the
+  session that is *ending* (so the user can find it in their claude.ai
+  history), in a code block, with no prefix. Anti-pattern observed:
+  suggesting the *next* conversation's title instead of the current one.
+
+**Note:** A "post-candidature" trigger once filed here was reclassified to
+the `/candidature` workflow — it is a candidature-side trigger that *calls*
+handoff, not a mechanic of handoff itself.
+
+**Note:** The Notion MCP workarounds (positioning, deletion pitfalls) are
+expected to be purged if David migrates off the Notion MCP, as planned.

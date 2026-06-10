@@ -20,19 +20,14 @@ and builds `.skill` archives for claude.ai.
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Structured item-by-item proofreading |
 | bilingual-skill-creator | ddaa | EN | Create a skill in two languages |
 | bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Bank statements into a double-entry CSV ledger |
+| handoff / passation | ddaa, ddaa-fr | EN, FR | Session wrap-up to continue in a new chat |
 
 Inside a plugin, invocation is `ddaa:brief`, `ddaa-fr:preflight`, etc.
 A given Claude Code project installs one plugin, not both.
 
-### claude.ai-only skills
-
-These aren't part of any Claude Code plugin. Download the `.skill`
-archive from [Releases](https://github.com/ddaanet/skills/releases).
-
-| Skill | Language | What it does |
-|-------|----------|--------------|
-| handoff | EN | Session wrap-up to continue in a new chat |
-| passation | FR | Résumé de fin de session |
+`handoff` / `passation` are most useful in hybrid projects where Claude
+Code cooperates with claude.ai. For code-only work, Claude Code's own
+`handoff` skill covers the same ground.
 
 ## Why bilingual pairs?
 
@@ -67,7 +62,8 @@ ls dist/
 
 claude.ai has no plugin namespace, so the build injects `-en` / `-fr`
 suffixes into archive names: `brief-en.skill`, `brief-fr.skill`, etc.
-`handoff` and `passation` ship as-is.
+`handoff` / `passation` already have distinct natural names, so they ship
+unsuffixed.
 
 ## Structure
 
@@ -75,13 +71,10 @@ suffixes into archive names: `brief-en.skill`, `brief-fr.skill`, etc.
 plugins/
   ddaa/                          # Claude Code plugin (EN)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,proof,bilingual-skill-creator,bookkeeping}/
+    skills/{brief,preflight,proof,bilingual-skill-creator,bookkeeping,handoff}/
   ddaa-fr/                       # Claude Code plugin (FR)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,relecture,saisie-comptable}/
-skills/                          # claude.ai-only (outside plugin discovery)
-  handoff/
-  passation/
+    skills/{brief,preflight,relecture,saisie-comptable,passation}/
 design/                          # architecture decisions per group
   brief/DESIGN.md
   preflight/DESIGN.md
@@ -120,19 +113,14 @@ claude.ai.
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | ddaa | EN | Créer un skill en deux langues |
 | bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Relevés bancaires dans un grand-livre CSV |
+| handoff / passation | ddaa, ddaa-fr | EN, FR | Résumé de fin de session pour reprendre dans un nouveau chat |
 
 Dans un plugin, l'invocation est `ddaa:brief`, `ddaa-fr:preflight`, etc.
 Un projet Claude Code donné installe un plugin, pas les deux.
 
-### Skills claude.ai uniquement
-
-Ces skills ne sont dans aucun plugin Claude Code. Télécharger l'archive
-`.skill` depuis les [Releases](https://github.com/ddaanet/skills/releases).
-
-| Skill | Langue | Fait quoi |
-|-------|--------|-----------|
-| handoff | EN | Session wrap-up to continue in a new chat |
-| passation | FR | Résumé de fin de session |
+`handoff` / `passation` sont surtout utiles dans les projets hybrides où
+Claude Code coopère avec claude.ai. Pour du travail purement code, le
+skill `handoff` natif de Claude Code couvre le même besoin.
 
 ## Pourquoi des paires bilingues ?
 
@@ -167,8 +155,8 @@ ls dist/
 
 claude.ai n'a pas de namespace plugin, donc le build injecte les
 suffixes `-en` / `-fr` dans les noms d'archive : `brief-en.skill`,
-`brief-fr.skill`, etc. `handoff` et `passation` sont expédiés tels
-quels.
+`brief-fr.skill`, etc. `handoff` / `passation` ont déjà des noms naturels
+distincts et sont expédiés sans suffixe.
 
 ## Licence
 

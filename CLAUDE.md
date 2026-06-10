@@ -5,16 +5,17 @@
 - **Commits :** gitmoji, messages denses orientés "pourquoi pas quoi"
 - **Prose :** Opus uniquement. Qualité dense, pas de pipeline agent-core.
 - **Langues :** Chaque skill est monolingue. DESIGN.md partagés en anglais.
-- **Structure :** Skills dans `plugins/<plugin>/skills/` (Claude Code) ou
-  `skills/` (claude.ai uniquement). DESIGN.md dans `design/<groupe>/`,
-  README.md injecté au build avec lien GitHub vers le DESIGN.md.
+- **Structure :** Skills dans `plugins/<plugin>/skills/`. DESIGN.md dans
+  `design/<groupe>/`, README.md injecté au build avec lien GitHub vers le
+  DESIGN.md.
 - **Plugins :** `ddaa` (EN, baseline) et `ddaa-fr` (FR) — sous-dossiers
   de `plugins/`, auto-découverte `skills/*/SKILL.md` dans chacun. Le
   repo racine n'est plus lui-même un plugin.
 - **Distribution claude.ai :** `build.sh` réécrit les noms avec suffixe
   `-en` / `-fr` dans les archives `.skill` pour désambiguïser le
-  namespace plat de claude.ai. Les skills sous `skills/` (handoff,
-  passation) sont expédiés tels quels.
+  namespace plat de claude.ai. Exception : `handoff` / `passation` ont
+  des noms naturels distincts (DESIGN handoff D-1) et sont expédiés sans
+  suffixe.
 - **Remote git :** `github` (pas `origin`). `git push github main`.
 - **Build :** `./build.sh` pour générer les .skill dans `dist/`.
 
@@ -30,6 +31,7 @@ plugins/
       proof/
       bilingual-skill-creator/
       bookkeeping/
+      handoff/
   ddaa-fr/                       # plugin Claude Code — FR
     .claude-plugin/plugin.json
     skills/
@@ -37,9 +39,7 @@ plugins/
       preflight/
       relecture/
       saisie-comptable/
-skills/                          # claude.ai uniquement, hors plugin
-  handoff/
-  passation/
+      passation/
 design/                          # DESIGN.md par groupe (pas dans les packages)
   brief/DESIGN.md
   preflight/DESIGN.md
@@ -59,7 +59,7 @@ build.sh
 | proof | proof (EN), relecture (FR) | ddaa, ddaa-fr | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | bilingual-skill-creator | ddaa | Créer un skill en deux langues |
 | bookkeeping | bookkeeping (EN), saisie-comptable (FR) | ddaa, ddaa-fr | Intégrer relevés bancaires dans grand-livre CSV |
-| handoff | handoff (EN), passation (FR) | — (claude.ai seul) | Résumé de fin de session |
+| handoff | handoff (EN), passation (FR) | ddaa, ddaa-fr | Résumé de fin de session (utile en projet hybride Claude Code + claude.ai) |
 
 ## Lignée
 

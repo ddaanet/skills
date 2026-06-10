@@ -4,7 +4,8 @@
 # DESIGN.md lives in design/<group>/ and is NOT included in the package.
 # Skills under plugins/ddaa/ are published as <name>-en.skill for claude.ai
 # (frontmatter + top-level dir are rewritten). Skills under plugins/ddaa-fr/
-# get -fr. Skills under skills/ (handoff, passation) are shipped as-is.
+# get -fr. Exception: handoff/passation already have distinct natural names
+# (DESIGN handoff D-1), so they ship to claude.ai unsuffixed.
 
 set -euo pipefail
 
@@ -38,8 +39,13 @@ while IFS= read -r skill_md; do
   case "$src_dir" in
     ./plugins/ddaa/skills/*)     suffix="-en" ;;
     ./plugins/ddaa-fr/skills/*)  suffix="-fr" ;;
-    ./skills/*)                  suffix=""    ;;
     *) echo "⚠️  skipping $src_dir — unknown location"; continue ;;
+  esac
+
+  # handoff/passation have distinct natural names (DESIGN handoff D-1):
+  # no -en/-fr disambiguation needed in claude.ai's flat namespace.
+  case "$short_name" in
+    handoff|passation) suffix="" ;;
   esac
 
   archive_name="${short_name}${suffix}"
