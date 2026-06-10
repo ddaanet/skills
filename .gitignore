@@ -3,6 +3,10 @@ dist/
 *.skill
 skills/*/README.md
 
+# Handoff plugin: pointer to the current session transcript (.jsonl).
+# Session-specific — handoff-task.md is versioned, this is not.
+.claude/handoff-session
+
 # Sandbox artifacts (host dotfiles mounted into the working tree as
 # character devices; they only show up in sandboxed sessions).
 # Exceptions: .claude/ (tracked tooling) and .gitmodules (submodules).
