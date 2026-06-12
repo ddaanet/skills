@@ -4,11 +4,14 @@ description: >-
   Préparer un résumé de passation pour continuer le travail dans un nouveau
   chat. Capturer le travail accompli, les tâches en attente, les blocages,
   et les enseignements ; livrer sur Notion (lien seul) quand c'est
-  disponible. Se déclenche sur "/passation", "passation", "prépare une
-  passation", "résume pour continuer demain", "conversation trop longue",
-  "on reprend dans un nouveau chat", "fin", "au revoir". Utiliser quand
-  l'utilisateur veut transférer le contexte vers une conversation future ou
-  couper la session proprement.
+  disponible. Se déclenche sur "/passation", "passation", "sauvegarde la
+  passation", "sauvegarde le contexte", "prépare une passation", "écris la
+  passation", "avant /clear", "avant de clear", "efface la passation",
+  "abandonne la passation", "passation propre", "finalise", "on conclut",
+  "j'ai terminé", "résume pour continuer demain", "conversation trop
+  longue", "on reprend dans un nouveau chat", "fin", "au revoir". Utiliser
+  quand l'utilisateur veut transférer le contexte vers une conversation
+  future ou couper la session proprement.
 ---
 
 # /passation — Résumé de fin de session
