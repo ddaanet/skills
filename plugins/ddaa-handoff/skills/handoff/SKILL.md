@@ -3,11 +3,13 @@ name: handoff
 description: >-
   Prepare a handoff summary to continue work in a new chat. Capture
   completed work, pending tasks, blockers, and learnings; deliver to Notion
-  (link only) when it's available. Triggers on "/handoff", "handoff",
-  "prepare a handoff", "summarize so I can continue tomorrow", "conversation
-  too long", "let's pick this up in a new chat", "end", "goodbye". Use when
-  the user wants to transfer context to a future conversation or close the
-  session cleanly.
+  (link only) when it's available. Triggers on "/handoff", "handoff", "save
+  handoff", "save context", "prepare handoff", "write handoff", "before
+  /clear", "before I clear", "clear handoff", "discard handoff", "clean
+  handoff", "finalize", "wrap up", "I'm done", "summarize so I can continue
+  tomorrow", "conversation too long", "let's pick this up in a new chat",
+  "end", "goodbye". Use when the user wants to transfer context to a future
+  conversation or close the session cleanly.
 ---
 
 # /handoff — Session Wrap-Up
