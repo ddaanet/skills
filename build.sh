@@ -14,18 +14,18 @@ DIST="dist"
 rm -rf "$DIST"
 mkdir -p "$DIST"
 
-# Short skill name → design-group.
-declare -A SKILL_GROUP=(
-  [brief]=brief
-  [preflight]=preflight
-  [bilingual-skill-creator]=bilingual-skill-creator
-  [proof]=proof
-  [relecture]=proof
-  [handoff]=handoff
-  [passation]=handoff
-  [bookkeeping]=bookkeeping
-  [saisie-comptable]=bookkeeping
-)
+# Short skill name → design-group. (case, not an associative array, so the
+# script runs on macOS's stock bash 3.2 — declare -A needs bash 4.0+.)
+group_for() {
+  case "$1" in
+    brief)                         echo brief ;;
+    preflight)                     echo preflight ;;
+    bilingual-skill-creator)       echo bilingual-skill-creator ;;
+    proof|relecture)               echo proof ;;
+    handoff|passation)             echo handoff ;;
+    bookkeeping|saisie-comptable)  echo bookkeeping ;;
+  esac
+}
 
 stage_root="$(mktemp -d)"
 trap 'rm -rf "$stage_root"' EXIT
@@ -68,7 +68,7 @@ p.write_text(text.replace(needle, replacement, 1))
 PY
   fi
 
-  group="${SKILL_GROUP[$short_name]:-}"
+  group="$(group_for "$short_name")"
   if [ -n "$group" ] && [ -f "design/$group/DESIGN.md" ]; then
     cat > "$stage_dir/README.md" <<EOF
 # $archive_name
