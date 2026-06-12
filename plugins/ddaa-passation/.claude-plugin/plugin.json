@@ -1,6 +1,6 @@
 {
   "name": "ddaa-passation",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Passation résumé de session (FR) — résumé de fin de session pour continuer dans un nouveau chat, livré sur Notion quand c'est disponible. Activer celui-ci OU le plugin handoff léger, pas les deux.",
   "author": {
     "name": "David Allouche",
