@@ -37,8 +37,10 @@ while IFS= read -r skill_md; do
   short_name="$(basename "$src_dir")"
 
   case "$src_dir" in
-    ./plugins/ddaa/skills/*)     suffix="-en" ;;
-    ./plugins/ddaa-fr/skills/*)  suffix="-fr" ;;
+    ./plugins/ddaa/skills/*)            suffix="-en" ;;
+    ./plugins/ddaa-fr/skills/*)         suffix="-fr" ;;
+    ./plugins/ddaa-handoff/skills/*)    suffix="-en" ;;
+    ./plugins/ddaa-passation/skills/*)  suffix="-fr" ;;
     *) echo "⚠️  skipping $src_dir — unknown location"; continue ;;
   esac
 
