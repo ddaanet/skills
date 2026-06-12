@@ -16,13 +16,15 @@ main_branch := "main"
 marketplace_dir := env_var_or_default("MARKETPLACE_DIR", justfile_directory() / ".." / "claude-plugins")
 
 # Plugins versioned in lockstep. Manifest: plugins/<name>/.claude-plugin/plugin.json
-plugins := "ddaa ddaa-fr"
+plugins := "ddaa ddaa-fr ddaa-handoff ddaa-passation"
 
 # Build all skills and validate both manifests; `release` depends on this.
 precommit:
     bash build.sh > /dev/null
     jq . plugins/ddaa/.claude-plugin/plugin.json > /dev/null
     jq . plugins/ddaa-fr/.claude-plugin/plugin.json > /dev/null
+    jq . plugins/ddaa-handoff/.claude-plugin/plugin.json > /dev/null
+    jq . plugins/ddaa-passation/.claude-plugin/plugin.json > /dev/null
 
 # Validate state, bump both manifests to the same new version, commit, tag
 # vX.Y.Z, push main + tag, create a GitHub release, then bump both
