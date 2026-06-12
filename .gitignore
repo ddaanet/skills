@@ -20,3 +20,4 @@ skills/*/README.md
 .vscode
 .zprofile
 .zshrc
+.claude/settings.local.json

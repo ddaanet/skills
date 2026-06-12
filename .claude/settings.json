@@ -17,5 +17,9 @@
     "plugin-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "shell-scripting@ddaanet": true
+  },
+  "gitlore": {
+    "enabled": true,
+    "precommitCommand": "just precommit"
   }
 }
