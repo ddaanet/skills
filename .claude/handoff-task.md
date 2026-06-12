@@ -1,8 +1,7 @@
 ## Current task
 
-Including handoff/passation in the ddaa/ddaa-fr Claude Code plugins with a Notion-first delivery rewrite (5 correctifs + DESIGN D-7) — code complete and verified, commit in progress.
+The handoff/passation extraction plan is fully implemented and released as `v0.3.0` (all four plugins + marketplace at 0.3.0); only the planning-docs commit `444711e` remains, sitting on `main` one commit ahead of the `github` remote and the tag.
 
 ## Open decisions
 
-- Whether to bump the ddaa/ddaa-fr plugin versions (both at 0.1.2) now that each ships a new skill.
-- Whether to push to the `github` remote after the commit (convention: `git push github main`).
+- Whether to `git push github main` to sync that trailing docs commit, or leave `main` ahead of the remote until the next release carries it.
