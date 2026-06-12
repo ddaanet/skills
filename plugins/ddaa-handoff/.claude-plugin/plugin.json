@@ -1,0 +1,10 @@
+{
+  "name": "ddaa-handoff",
+  "version": "0.2.0",
+  "description": "Resume-summary handoff (EN) — end-of-session summary to continue work in a new chat, delivered to Notion when available. Enable this OR the lightweight handoff plugin, not both.",
+  "author": {
+    "name": "David Allouche",
+    "email": "david@ddaa.net"
+  },
+  "license": "MIT"
+}
