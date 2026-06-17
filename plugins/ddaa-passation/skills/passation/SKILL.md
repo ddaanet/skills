@@ -93,16 +93,8 @@ Deux voies selon l'environnement.
 
 1. Créer la page sous le parent pertinent — la page projet ou domaine que
    concerne la conversation — avec `notion-create-pages`. Si le parent est
-   ambigu, le demander.
-2. **Repositionner en tête.** `notion-create-pages` ajoute toujours la page
-   en fin de liste du parent ; l'ordre voulu est chrono inverse (la plus
-   récente en haut). Repositionner via `notion-update-page`
-   command=`replace_content` : re-lister l'intégralité des blocs
-   `<page url="…">` du parent dans l'ordre voulu, le nouveau en tête, avec
-   le résumé une ligne à côté de chaque référence. Ne **pas** supprimer un
-   bloc `<page>` isolé via `update_content` — ça l'envoie en corbeille
-   (piège documenté dans les correctifs candidature).
-3. **Pas de double génération.** Ne pas regénérer le contenu en fichier
+   ambigu, le demander. Inclure un résumé d'une ligne à côté de la référence `<page>`.
+2. **Pas de double génération.** Ne pas regénérer le contenu en fichier
    local ni utiliser `present_files`. Produire uniquement un lien
    `[Titre](url)` vers la page Notion. Même règle pour tout document déjà
    enregistré sur Notion : Notion fait foi.

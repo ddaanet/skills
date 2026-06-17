@@ -112,13 +112,10 @@ Notion, where a claude.ai conversation can pick them up. A local file or
 - **No double generation.** Once the handoff is on Notion, do not also emit
   a local file or `present_files` — Notion is the source of truth, and a
   second copy creates an ambiguous one. Return only the link.
-- **Reverse-chrono positioning.** `notion-create-pages` appends to the end
-  of the parent; the wanted order is most-recent-on-top. Reposition with
-  `notion-update-page` command=`replace_content`, re-listing the parent's
-  full set of `<page>` blocks with their one-line summaries. Surgically
-  deleting a `<page>` block via `update_content` trashes the child page —
-  this is the reliable pattern, learned the hard way in the candidature
-  workflow. Both skills carry the warning so the lesson is not re-paid.
+- **Append order.** Handoffs are appended to the parent (chronological,
+  oldest first). No repositioning step. Earlier reverse-chrono positioning
+  via `notion-update-page` replace_content was removed — the extra edit was
+  unnecessary churn.
 - **End-of-session triggers.** "fin"/"au revoir" (FR), "end"/"goodbye" (EN)
   fire the handoff without asking for confirmation — the user closing the
   session wants it cut cleanly, not a yes/no round-trip.

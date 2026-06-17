@@ -91,16 +91,8 @@ Two paths, depending on the environment.
 
 1. Create the page under the relevant parent — the project or area page the
    conversation concerns — with `notion-create-pages`. If the parent is
-   ambiguous, ask.
-2. **Reposition to the top.** `notion-create-pages` always appends the page
-   to the end of the parent's list; the wanted order is reverse-chrono
-   (most recent on top). Reposition via `notion-update-page`
-   command=`replace_content`: re-list the parent's entire set of
-   `<page url="…">` blocks in the wanted order, the new one first, each with
-   its one-line summary next to the reference. Do **not** delete an isolated
-   `<page>` block via `update_content` — that sends it to the trash (pitfall
-   documented in the candidature corrections).
-3. **No double generation.** Do not regenerate the content as a local file
+   ambiguous, ask. Include a one-line summary next to the `<page>` reference.
+2. **No double generation.** Do not regenerate the content as a local file
    nor use `present_files`. Produce only a `[Title](url)` link to the Notion
    page. Same rule for any document already saved to Notion: Notion is the
    source of truth.
