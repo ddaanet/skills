@@ -13,12 +13,21 @@ This version auto-detects project structure instead.
 ## Core Design
 
 **Purpose:** Validate git state, run quality checks, audit documentation, and
-produce a go/no-go readiness report before release. The actual release command
-is human-executed only.
+produce a go/no-go readiness report before release. The report is the
+deliverable; whether the release command then runs is a separate decision.
+
+**Execution model:** Both models are legitimate. A human may read the report
+and run the release afterwards, or the same agent may run it -- but only when
+the request that reached it already asked for a release. The skill never
+infers authorization from a passing report alone, which keeps report-and-stop
+the default: preflight is often invoked precisely to *ask* whether a release
+is possible, and a release is hard to reverse (tag, GitHub release, and a
+marketplace push in a second repo).
 
 **Non-goals:**
 - Bumping versions (out of scope, release tooling does this)
-- Running the release command (human-only, enforced by design)
+- Releasing on the skill's own initiative (authorization comes from the
+  request, never from a passing report)
 - Managing changelogs (separate concern)
 
 ## Detection Strategy

@@ -12,7 +12,8 @@ description: >-
 # Preflight
 
 Valider les préconditions, auditer la documentation, produire un rapport de
-conformité. La commande de release est exécutée par l'humain, pas par l'agent.
+conformité. Que la commande de release soit ensuite lancée est une décision
+distincte -- voir **Après le rapport**.
 
 Les mises à jour de doc sont groupées en fin de cycle de développement :
 hack, hack, hack, **preflight**, release.
@@ -160,13 +161,17 @@ Si tout est ok : confirmer la conformité et afficher la commande de release.
 ## Après le rapport
 
 - Checks en échec : arrêt, l'humain corrige
-- Tout ok : le skill termine, pas d'action supplémentaire
-- Ne PAS invoquer d'autres skills ou commandes
-- L'humain exécute la commande de release manuellement
+- Tout ok, et la demande ne réclamait pas de release : rapport, puis arrêt
+- Tout ok, et la demande réclamait déjà une release : rapport, puis lancer
+  la commande de release
+- Ne PAS invoquer d'autres skills
+- Un rapport tout-ok ne vaut jamais autorisation à lui seul
 
 ## Contraintes
 
-- **Ne jamais lancer la commande de release.** Réservée à l'humain.
+- **Ne jamais releaser de sa propre initiative.** Un rapport tout-ok ne
+  vaut pas autorisation. Ne lancer la commande de release que si la demande
+  reçue la réclamait déjà ; sinon, rapporter et s'arrêter.
 - **Arrêt sur échec dur.** Branche, arbre propre, checks qualité sont
   des blocages. Arrêter et énumérer les corrections.
 - **Avertissement sur problèmes souples.** Tâches en attente, runner

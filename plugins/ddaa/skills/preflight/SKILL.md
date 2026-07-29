@@ -12,7 +12,8 @@ description: >-
 # Preflight
 
 Validate preconditions, audit documentation, and produce a readiness
-assessment. The actual release command is human-executed.
+assessment. Whether the release command then runs is a separate decision
+-- see **After the report**.
 
 Documentation updates are batched at the end of the development cycle:
 hack, hack, hack, **preflight**, release.
@@ -158,13 +159,17 @@ If all pass: confirm ready and show the release command.
 ## After the report
 
 - FAIL checks: stop, wait for human to fix
-- All pass: skill completes, no further action
-- Do NOT invoke other skills or commands
-- Human executes release command manually
+- All pass, and the request did not ask for a release: report and stop
+- All pass, and the request already asked for one: report, then run the
+  release command
+- Do NOT invoke other skills
+- A passing report is never authorization on its own
 
 ## Constraints
 
-- **Never run the release command.** Human-only.
+- **Never release on your own initiative.** A passing report is not
+  authorization. Run the release command only when the request that
+  reached you already asked for it; otherwise report and stop.
 - **Abort on hard failures.** Branch, clean-tree, quality checks are
   blockers. Stop and enumerate fixes.
 - **Warn on soft issues.** Pending tasks, missing check runner, remote
