@@ -176,6 +176,11 @@ If all pass: confirm ready and show the release command.
   divergence are warnings. Inform, do not block.
 - **No version bumping.** This skill assesses readiness, it does not
   modify version numbers.
+- **Same gate in every package.** Never add a project-specific check to
+  this skill. Step 3 already runs whatever the project defines, so a
+  project's own gate is reached through its check runner -- wire it into
+  the project's `justfile`/CI, not here. Only universal checks (git
+  state, doc audit, version infrastructure) belong in preflight.
 - **No error suppression.** Never use `|| true` or swallow exit codes
   (exception: detection probes like `2>/dev/null` for optional tools).
 - **Report failures clearly.** If anything fails, say what and stop.

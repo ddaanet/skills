@@ -179,6 +179,12 @@ Si tout est ok : confirmer la conformité et afficher la commande de release.
   pas bloquer.
 - **Pas de changement de version.** Ce skill évalue la conformité, il
   ne modifie pas les numéros de version.
+- **Le même gate dans tous les packages.** Ne jamais ajouter à ce skill
+  une vérification propre à un projet. L'étape 3 lance déjà ce que le
+  projet définit : le gate d'un projet passe donc par son runner de
+  checks -- le câbler dans le `justfile`/CI du projet, pas ici. Seules
+  les vérifications universelles (état git, audit de doc, outillage de
+  version) ont leur place dans preflight.
 - **Pas de suppression d'erreurs.** Ne jamais utiliser `|| true` ou
   avaler les codes de retour (exception : sondes de détection comme
   `2>/dev/null` pour les outils optionnels).
