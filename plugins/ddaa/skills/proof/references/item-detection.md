@@ -62,8 +62,7 @@ On user confirmation after the verdict summary:
 - **delete** — remove the item
 - **skip** — no edit (explicit deferral)
 
-Apply bottom-to-top in the file to avoid line-shift interference. For
-composite artifacts (multiple files), apply per-file independently.
+For composite artifacts (multiple files), apply per-file independently.
 
 ## Revisit
 

@@ -117,13 +117,9 @@ Then ask for confirmation before applying.
 Apply all decisions at once:
 
 - **If the artifact is a file:** edit the file (str_replace or
-  Filesystem:edit_file), applying corrections bottom-to-top to avoid
-  line-shift interference.
+  Filesystem:edit_file).
 - **If the artifact is conversation text:** produce the corrected version
   as a downloadable file (present_files).
-
-**Application order:** bottom-to-top in the document so line numbers
-remain valid.
 
 ### 7. Verification
 
