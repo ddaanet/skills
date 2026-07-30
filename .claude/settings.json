@@ -17,7 +17,8 @@
     "plugin-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "shell-scripting@ddaanet": true,
-    "handoff@ddaanet": true
+    "handoff@ddaanet": true,
+    "skill-creator@claude-plugins-official": true
   },
   "gitlore": {
     "enabled": true,
