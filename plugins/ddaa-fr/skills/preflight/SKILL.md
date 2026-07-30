@@ -42,6 +42,7 @@ git submodule status 2>/dev/null
 Chercher des marqueurs de tâches ouvertes dans les emplacements courants :
 
 ```bash
+# Adapter à ce qui existe dans le projet
 for f in TODO.md agents/session.md TASKS.md; do
   [ -f "$f" ] && grep -c '^\- \[ \]' "$f" && echo "  ^ dans $f"
 done

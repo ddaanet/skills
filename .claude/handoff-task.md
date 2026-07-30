@@ -1,7 +1,8 @@
 ## Current task
 
-build.sh reviewed via shell-gotchas and rewritten to drop `declare -A` for a `group_for()` case (runs on macOS stock bash 3.2); shellcheck clean, build verified at 11 skills — change is about to be committed.
+Both preflight briefs in `docs/plans/` are implemented, and the `proof`/`relecture` pair is resynced and parity-checked. Nothing is mid-flight. The next piece of work is evidence rather than code: a skill-creator eval loop over the pair, to show that batch-apply still lands every edit now that the bottom-to-top ordering hint is gone.
 
 ## Open decisions
 
-- Whether to `git push github main` now. The trailing docs commit `444711e` and the imminent build.sh commit both sit on `main` ahead of the `github` remote and the `v0.3.0` tag; still unpushed from the prior session.
+- Whether the two spent brief files (`docs/plans/2026-07-27-preflight-generic-scope-brief.md`, `docs/plans/2026-07-29-preflight-agent-run-release-brief.md`) belong in the repo as an archive of landed decisions, or should be deleted as working docs whose content now lives in the skills and in `design/preflight/DESIGN.md`.
+- Which baseline arm the relecture evals compare against: skill-creator's "improving an existing skill" path wants a snapshot of the pre-`2d73fa2` version, while a plain no-skill run measures something else. The change under test is a deletion, so the pre-`2d73fa2` snapshot is the informative arm.
