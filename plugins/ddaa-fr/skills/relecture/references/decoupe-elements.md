@@ -64,9 +64,8 @@ Sur confirmation de l'utilisateur après le résumé :
 - **supprimer** — retirer l'élément
 - **passer** — pas de modification (report explicite)
 
-Appliquer de bas en haut dans le fichier pour éviter les décalages de
-lignes entre corrections. Pour les artefacts composites (plusieurs
-fichiers), appliquer par fichier indépendamment.
+Pour les artefacts composites (plusieurs fichiers), appliquer par fichier
+indépendamment.
 
 ## Revenir sur un élément
 

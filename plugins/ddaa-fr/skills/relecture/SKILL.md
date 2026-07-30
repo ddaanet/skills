@@ -123,13 +123,9 @@ Puis demander confirmation avant d'appliquer.
 Appliquer toutes les décisions d'un coup :
 
 - **Si l'artefact est un fichier :** éditer le fichier (str_replace ou
-  Filesystem:edit_file) en appliquant les corrections de bas en haut
-  (éviter les décalages de lignes).
+  Filesystem:edit_file).
 - **Si l'artefact est un texte en conversation :** produire la version
   corrigée comme fichier téléchargeable (present_files).
-
-**Ordre d'application :** de bas en haut dans le document pour que les
-numéros de ligne restent valides.
 
 ### 7. Vérification
 
