@@ -8,8 +8,9 @@ and [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 These are [Agent Skills](https://agentskills.io) — markdown
 instructions that extend what Claude can do in a conversation. Each skill
 is a self-contained directory with a `SKILL.md` and optional reference
-files. This repo ships **two Claude Code plugins** (`ddaa`, `ddaa-fr`)
-and builds `.skill` archives for claude.ai.
+files. This repo ships **four Claude Code plugins** (`ddaa`, `ddaa-fr`,
+`ddaa-handoff`, `ddaa-passation`) and builds `.skill` archives for
+claude.ai.
 
 ## Plugins & skills
 
@@ -20,14 +21,15 @@ and builds `.skill` archives for claude.ai.
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Structured item-by-item proofreading |
 | bilingual-skill-creator | ddaa | EN | Create a skill in two languages |
 | bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Bank statements into a double-entry CSV ledger |
-| handoff / passation | ddaa, ddaa-fr | EN, FR | Session wrap-up to continue in a new chat |
+| handoff / passation | ddaa-handoff, ddaa-passation | EN, FR | Session wrap-up to continue in a new chat |
 
 Inside a plugin, invocation is `ddaa:brief`, `ddaa-fr:preflight`, etc.
-A given Claude Code project installs one plugin, not both.
+A given Claude Code project installs one language plugin, not both.
 
-`handoff` / `passation` are most useful in hybrid projects where Claude
-Code cooperates with claude.ai. For code-only work, Claude Code's own
-`handoff` skill covers the same ground.
+`handoff` / `passation` live in their own plugins so each project decides
+separately. They are most useful in hybrid projects where Claude Code
+cooperates with claude.ai. For code-only work, the lightweight `handoff`
+plugin covers the same ground — enable one or the other, not both.
 
 ## Why bilingual pairs?
 
@@ -46,8 +48,10 @@ Details in each group's [`design/*/DESIGN.md`](design/).
 
 ```bash
 claude /plugin marketplace add ddaanet/claude-plugins
-claude /plugin install ddaa@ddaanet        # English
-claude /plugin install ddaa-fr@ddaanet     # French
+claude /plugin install ddaa@ddaanet             # English
+claude /plugin install ddaa-fr@ddaanet          # French
+claude /plugin install ddaa-handoff@ddaanet     # session wrap-up (EN)
+claude /plugin install ddaa-passation@ddaanet   # session wrap-up (FR)
 ```
 
 ### claude.ai (Agent Skills)
@@ -71,10 +75,16 @@ unsuffixed.
 plugins/
   ddaa/                          # Claude Code plugin (EN)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,proof,bilingual-skill-creator,bookkeeping,handoff}/
+    skills/{brief,preflight,proof,bilingual-skill-creator,bookkeeping}/
   ddaa-fr/                       # Claude Code plugin (FR)
     .claude-plugin/plugin.json
-    skills/{brief,preflight,relecture,saisie-comptable,passation}/
+    skills/{brief,preflight,relecture,saisie-comptable}/
+  ddaa-handoff/                  # Claude Code plugin (EN) — opt-in
+    .claude-plugin/plugin.json
+    skills/handoff/
+  ddaa-passation/                # Claude Code plugin (FR) — opt-in
+    .claude-plugin/plugin.json
+    skills/passation/
 design/                          # architecture decisions per group
   brief/DESIGN.md
   preflight/DESIGN.md
@@ -100,9 +110,9 @@ Boîte à outils personnelle — skills bilingues pour
 Ce sont des [Agent Skills](https://agentskills.io) — des
 instructions markdown qui étendent les capacités de Claude dans une
 conversation. Chaque skill est un répertoire autonome avec un `SKILL.md`
-et des fichiers de référence optionnels. Ce dépôt livre **deux plugins
-Claude Code** (`ddaa`, `ddaa-fr`) et génère des archives `.skill` pour
-claude.ai.
+et des fichiers de référence optionnels. Ce dépôt livre **quatre plugins
+Claude Code** (`ddaa`, `ddaa-fr`, `ddaa-handoff`, `ddaa-passation`) et
+génère des archives `.skill` pour claude.ai.
 
 ## Plugins & skills
 
@@ -113,14 +123,16 @@ claude.ai.
 | proof / relecture | ddaa, ddaa-fr | EN, FR | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | ddaa | EN | Créer un skill en deux langues |
 | bookkeeping / saisie-comptable | ddaa, ddaa-fr | EN, FR | Relevés bancaires dans un grand-livre CSV |
-| handoff / passation | ddaa, ddaa-fr | EN, FR | Résumé de fin de session pour reprendre dans un nouveau chat |
+| handoff / passation | ddaa-handoff, ddaa-passation | EN, FR | Résumé de fin de session pour reprendre dans un nouveau chat |
 
 Dans un plugin, l'invocation est `ddaa:brief`, `ddaa-fr:preflight`, etc.
-Un projet Claude Code donné installe un plugin, pas les deux.
+Un projet Claude Code donné installe un plugin de langue, pas les deux.
 
-`handoff` / `passation` sont surtout utiles dans les projets hybrides où
-Claude Code coopère avec claude.ai. Pour du travail purement code, le
-skill `handoff` natif de Claude Code couvre le même besoin.
+`handoff` / `passation` vivent dans leurs propres plugins pour que chaque
+projet tranche séparément. Ils sont surtout utiles dans les projets
+hybrides où Claude Code coopère avec claude.ai. Pour du travail purement
+code, le plugin `handoff` léger couvre le même besoin — n'en activer
+qu'un.
 
 ## Pourquoi des paires bilingues ?
 
@@ -139,8 +151,10 @@ Détails dans les [`design/*/DESIGN.md`](design/) de chaque groupe.
 
 ```bash
 claude /plugin marketplace add ddaanet/claude-plugins
-claude /plugin install ddaa@ddaanet        # anglais
-claude /plugin install ddaa-fr@ddaanet     # français
+claude /plugin install ddaa@ddaanet             # anglais
+claude /plugin install ddaa-fr@ddaanet          # français
+claude /plugin install ddaa-handoff@ddaanet     # fin de session (EN)
+claude /plugin install ddaa-passation@ddaanet   # fin de session (FR)
 ```
 
 ### claude.ai (Agent Skills)
