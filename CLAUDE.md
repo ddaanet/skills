@@ -27,8 +27,9 @@
   **lockstep** (même version, tag unique `vX.Y.Z`). La recette bompe tous
   les manifests, tague, pousse, crée la GitHub release, puis bompe les
   entrées correspondantes du marketplace (`../claude-plugins`, ou
-  `MARKETPLACE_DIR`) et le pousse. **Ne jamais éditer `.version` à la
-  main** — un hook `version-guard` (PreToolUse) le refuse ; la recette est
+  `MARKETPLACE_DIR`), y recopie la `description` de chaque `plugin.json`
+  (les `keywords` restent propres au marketplace) et le pousse. **Ne
+  jamais éditer `.version` à la main** — un hook `version-guard` (PreToolUse) le refuse ; la recette est
   le seul chemin. Adaptée de `claude-plugin-dev` mais non vendorée (une
   seule occurrence ne justifie pas de généraliser le toolkit).
 

@@ -28,7 +28,8 @@ precommit:
 
 # Validate state, bump every manifest to the same new version, commit, tag
 # vX.Y.Z, push main + tag, create a GitHub release carrying the dist/*.skill
-# archives for claude.ai users, then bump every matching marketplace entry and push that repo. A release without the marketplace
+# archives for claude.ai users, then bump every matching marketplace entry,
+# copy its description from plugin.json, and push that repo. A release without the marketplace
 # bump is invisible to end-users, so the two are coupled here. Pass `--yes`
 # as the second arg to skip the confirmation prompt.
 
@@ -150,13 +151,21 @@ release bump='patch' yes='': precommit
     git push "$remote" "$tag"
     gh release create "$tag" --title "Release $new_version" --generate-notes "${assets[@]}"
 
-    # --- bump every marketplace entry, commit, push ---
-    names_json=$(printf '%s\n' "${plugins[@]}" | jq -R . | jq -s .)
-    tmp=$(mktemp)
-    jq --argjson names "$names_json" --arg v "$new_version" '
-      .plugins |= map(if (.name as $n | $names | index($n)) then .version = $v else . end)
-    ' "$marketplace_json" > "$tmp"
-    mv "$tmp" "$marketplace_json"
+    # --- bump every marketplace entry, sync its description, commit, push ---
+    # plugin.json wins over the marketplace entry under the default
+    # strict: true, so the entry's description is copied from it rather than
+    # kept by hand; it drifted on every wording change otherwise. Keywords
+    # stay marketplace-owned: the manifests carry none.
+    for p in "${plugins[@]}"; do
+      desc=$(jq -r '.description // empty' "plugins/$p/.claude-plugin/plugin.json")
+      tmp=$(mktemp)
+      jq --arg n "$p" --arg v "$new_version" --arg d "$desc" '
+        .plugins |= map(if .name == $n
+          then .version = $v | (if $d != "" then .description = $d else . end)
+          else . end)
+      ' "$marketplace_json" > "$tmp"
+      mv "$tmp" "$marketplace_json"
+    done
     git -C "$marketplace_dir" add .claude-plugin/marketplace.json
     # Idempotent: if the entries were already at $new_version, skip the commit
     # rather than let `git commit` exit 1 under `set -e` after the irreversible
