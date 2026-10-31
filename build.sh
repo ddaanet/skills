@@ -6,13 +6,23 @@
 # (frontmatter + top-level dir are rewritten). Skills under plugins/ddaa-fr/
 # get -fr. Exception: handoff/passation already have distinct natural names
 # (DESIGN handoff D-1), so they ship to claude.ai unsuffixed.
+#
+# Sources come from the git index, never the working tree: an untracked or
+# ignored file inside a skill dir must not reach a public release archive.
+# At release time the index equals HEAD (the recipe refuses a dirty tree);
+# at precommit it is exactly what is about to be committed.
 
 set -euo pipefail
 
 REPO_URL="https://github.com/ddaanet/skills"
-DIST="dist"
+cd "$(git rev-parse --show-toplevel)"
+DIST="$PWD/dist"
 rm -rf "$DIST"
 mkdir -p "$DIST"
+
+if ! git diff --quiet; then
+  echo "⚠️  unstaged changes are not packaged — building from the index" >&2
+fi
 
 # Short skill name → design-group. (case, not an associative array, so the
 # script runs on macOS's stock bash 3.2 — declare -A needs bash 4.0+.)
@@ -27,8 +37,13 @@ group_for() {
   esac
 }
 
-stage_root="$(mktemp -d)"
-trap 'rm -rf "$stage_root"' EXIT
+work_root="$(mktemp -d)"
+trap 'rm -rf "$work_root"' EXIT
+src_root="$work_root/src"
+stage_root="$work_root/stage"
+mkdir -p "$stage_root"
+git checkout-index -a --prefix="$src_root/"
+cd "$src_root"
 
 count=0
 
@@ -89,5 +104,5 @@ EOF
 done < <(find . -name SKILL.md -not -path './dist/*' | sort)
 
 echo ""
-echo "Built $count skills in $DIST/"
+echo "Built $count skills in dist/"
 ls -la "$DIST/"
