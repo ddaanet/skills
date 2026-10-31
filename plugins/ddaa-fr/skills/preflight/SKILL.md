@@ -28,14 +28,26 @@ git status --porcelain
 git fetch --dry-run 2>&1
 git log @{u}..HEAD --oneline 2>/dev/null
 git submodule status 2>/dev/null
+git config -f .gitmodules --get submodule.gitlore-memory.path 2>/dev/null
 ```
+
+La dernière sonde donne le chemin de la mémoire gitlore, si le dépôt en
+monte une. Ce chemin-là, et lui seul, échappe aux deux règles de propreté
+ci-dessous : la mémoire reste modifiée entre deux commits du parent, c'est
+voulu, et le prochain commit du parent -- celui de la release compris --
+l'enregistre. Écarter sa ligne de `git status --porcelain` et de
+`git submodule status`, puis juger le reste normalement. Tout autre chemin
+compte, autres sous-modules compris. Sortie vide : aucune exception.
 
 | Vérification | Règle |
 |--------------|-------|
 | Branche | `main` ou `master` obligatoire. Sinon, arrêt. |
-| Arbre de travail | Doit être propre. Sinon, arrêt. |
+| Arbre de travail | Doit être propre, hors mémoire. Sinon, arrêt. |
 | Synchro remote | Pas de commits non poussés/tirés. Avertissement si divergence. |
-| Sous-modules | Pas de modifications non commitées. Sinon, arrêt. |
+| Sous-modules | Pas de modifications non commitées, hors mémoire. Sinon, arrêt. |
+
+Si la mémoire était modifiée, le mentionner dans le rapport, sous le
+tableau, à titre d'information -- ni ok, ni échec.
 
 ## Étape 2 : Vérifier les tâches en attente
 
@@ -141,6 +153,8 @@ le signaler.
 | Checks qualité      | ok/ÉCHEC/attention (pas de runner) |
 | Tâches en attente   | ok/attention (N en attente) |
 | Documentation       | ok/mise à jour (N fichiers) |
+
+**Mémoire :** `<chemin>` modifiée, laissée au prochain commit   # seulement si modifiée
 
 **Version courante :** X.Y.Z
 **Commits depuis la dernière release :** N

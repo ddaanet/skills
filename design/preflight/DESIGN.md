@@ -42,6 +42,35 @@ The skill auto-detects project characteristics rather than assuming paths:
 | Pending tasks | `TODO.md` / `agents/session.md` / taskfile patterns |
 | Style corpus | `tmp/STYLE_CORPUS` > `STYLE_CORPUS.md` > bundled default |
 | Git remote | `origin` > first remote found |
+| gitlore memory store | `git config -f .gitmodules --get submodule.gitlore-memory.path` |
+
+## Clean-Tree Exemption: the gitlore Memory Store
+
+Branch, clean tree and submodules are hard blockers, with exactly one
+carve-out: the gitlore memory submodule. In a repo that mounts gitlore,
+` M memory` is the resting state, not unfinished work -- nobody commits
+inside the store; the parent's pre-commit hook gates it and stages the
+moved gitlink into the next parent commit, the release commit included.
+Without the carve-out preflight cannot pass in such a repo without a
+hand-made commit the release was about to make anyway.
+
+- **One path, detected.** The path comes from the submodule's stable
+  registered name (`gitlore-memory`), never a hardcoded `memory`. Empty
+  output means no store and no exemption. Every other path -- untracked
+  files, other dirty submodules -- remains a finding; a gate that waved
+  those through would be broken the other way.
+- **Reported, not dropped.** A dirty store appears in the report as
+  information, outside the pass/FAIL table: neither silent nor counted as
+  a pass.
+- **Not a project-specific check.** The rule is universal and inert where
+  gitlore is absent, so it does not breach the same-gate-everywhere
+  constraint.
+
+Rejected: requiring the store to be committed before passing (the real
+precondition -- a fresh approved summary before the next parent commit --
+is a commit-time rule gitlore's own hook already enforces, at the right
+moment); relaxing the submodule rule in general (only the memory store is
+dirty between commits by design).
 
 ## Documentation Audit Scope
 

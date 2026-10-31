@@ -28,14 +28,26 @@ git status --porcelain
 git fetch --dry-run 2>&1
 git log @{u}..HEAD --oneline 2>/dev/null
 git submodule status 2>/dev/null
+git config -f .gitmodules --get submodule.gitlore-memory.path 2>/dev/null
 ```
+
+The last probe prints the path of the gitlore memory store, if the repo
+mounts one. That one path is exempt from both clean-tree rules below: the
+store is dirty between parent commits by design, and the next parent
+commit -- the release commit included -- records it. Leave out its line
+in `git status --porcelain` and in `git submodule status`, and judge the
+rest as usual. Every other path still counts, other submodules included.
+Empty output: no exemption.
 
 | Check | Rule |
 |-------|------|
 | Branch | Must be `main` or `master`. Abort otherwise. |
-| Working tree | Must be clean. Abort if dirty. |
+| Working tree | Must be clean, the memory store aside. Abort if dirty. |
 | Remote sync | No unpushed/unpulled commits. Warn if diverged. |
-| Submodules | No uncommitted changes. Abort if dirty. |
+| Submodules | No uncommitted changes, the memory store aside. Abort if dirty. |
+
+If the memory store was dirty, say so in the report as information under
+the table -- neither a pass nor a failure.
 
 ## Step 2: Check for pending tasks
 
@@ -139,6 +151,8 @@ its absence.
 | Quality checks      | pass/FAIL/warn (no runner) |
 | Pending tasks       | pass/warn (N pending) |
 | Documentation       | pass/updated (N files) |
+
+**Memory store:** `<path>` dirty, left to the next commit   # only if dirty
 
 **Current version:** X.Y.Z
 **Commits since last release:** N
