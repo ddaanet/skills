@@ -28,26 +28,42 @@ git status --porcelain
 git fetch --dry-run 2>&1
 git log @{u}..HEAD --oneline 2>/dev/null
 git submodule status 2>/dev/null
-git config -f .gitmodules --get submodule.gitlore-memory.path 2>/dev/null
+git config -f "$(git rev-parse --show-toplevel)/.gitmodules" \
+  --get submodule.gitlore-memory.path 2>/dev/null
 ```
 
 The last probe prints the path of the gitlore memory store, if the repo
-mounts one. That one path is exempt from both clean-tree rules below: the
-store is dirty between parent commits by design, and the next parent
-commit -- the release commit included -- records it. Leave out its line
-in `git status --porcelain` and in `git submodule status`, and judge the
-rest as usual. Every other path still counts, other submodules included.
-Empty output: no exemption.
+mounts one. Empty output: no exemption, judge everything.
+
+That one path is exempt from both clean-tree rules below while it is
+merely modified: ` M`, `M ` or `MM` in `git status --porcelain`, `+` or
+no prefix in `git submodule status`. The store differs from the parent's
+HEAD between commits by design: gitlore commits it on its own and stages
+its moved pointer, and the next parent commit records that pointer. Leave
+those lines out and judge the rest as usual. Every other path still
+counts, other submodules included.
+
+A conflicted store is not exempt: an unmerged code (`UU`, `AA`, `DU` ...)
+in porcelain or a `U` prefix in submodule status fails the clean tree,
+and the fix is `/gitlore:resolve`.
+
+Nor is a store checked out behind or beside its recorded pointer, which
+also shows `+`: committing it would walk the pointer back. On `+`, run
+`git -C <path> merge-base --is-ancestor "$(git rev-parse :<path>)" HEAD`
+from the top level. Non-zero fails the clean tree; the fix is
+`git submodule update -- <path>`, or `/gitlore:merge`.
+
+The exemption only holds if the release recipe makes it too. When the
+store is modified and the project's recipe refuses any dirty tree without
+excluding that path, the release will refuse what preflight passed:
+report a clean-tree FAIL whose fix is to exclude the path in the recipe.
 
 | Check | Rule |
 |-------|------|
 | Branch | Must be `main` or `master`. Abort otherwise. |
-| Working tree | Must be clean, the memory store aside. Abort if dirty. |
+| Working tree | Must be clean, a modified memory store aside. Abort if dirty. |
 | Remote sync | No unpushed/unpulled commits. Warn if diverged. |
-| Submodules | No uncommitted changes, the memory store aside. Abort if dirty. |
-
-If the memory store was dirty, say so in the report as information under
-the table -- neither a pass nor a failure.
+| Submodules | No uncommitted changes, a modified memory store aside. Abort if dirty. |
 
 ## Step 2: Check for pending tasks
 
@@ -102,7 +118,8 @@ Two audiences:
 - Memory indices: verify entries are current
 
 Commit documentation changes before proceeding. The release recipe
-expects a clean tree.
+expects a clean tree, the memory store aside: leave a modified store to
+the commit that records its pointer, and do not commit inside it.
 
 ## Step 5: Assess release scope
 
@@ -152,7 +169,7 @@ its absence.
 | Pending tasks       | pass/warn (N pending) |
 | Documentation       | pass/updated (N files) |
 
-**Memory store:** `<path>` dirty, left to the next commit   # only if dirty
+**Memory store:** `<path>` modified, left to the next commit
 
 **Current version:** X.Y.Z
 **Commits since last release:** N
@@ -165,6 +182,9 @@ its absence.
   `just release minor`     # minor bump
   `just release major`     # major bump
 ```
+
+Include the **Memory store** line only when Step 1 exempted a modified
+store. It is information, neither a pass nor a failure.
 
 If any FAIL: list each failure with specific fix instructions. Stop.
 

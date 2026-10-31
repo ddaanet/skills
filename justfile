@@ -42,7 +42,40 @@ release bump='patch' yes='': precommit
     plugins=({{plugins}})
 
     # --- validate repo state ---
-    git diff --quiet HEAD || { echo "error: uncommitted changes" >&2; exit 1; }
+    # The gitlore memory store is the one path allowed to differ from HEAD:
+    # gitlore commits it on its own schedule and stages the moved pointer, and
+    # the release commit below records that pointer. Every other path, and a
+    # store left mid-merge, still refuses the release.
+    top=$(git rev-parse --show-toplevel)
+    mem=""
+    if [ -f "$top/.gitmodules" ]; then
+      rc=0
+      mem=$(git config -f "$top/.gitmodules" --get submodule.gitlore-memory.path) || rc=$?
+      [ "$rc" -le 1 ] || { echo "error: cannot read $top/.gitmodules" >&2; exit 1; }
+    fi
+    guard=(":(top)")
+    if [ -n "$mem" ]; then
+      guard+=(":(top,exclude)$mem")
+      unmerged=$(git ls-files -u -- ":(top)$mem")
+      if [ -n "$unmerged" ]; then
+        echo "error: memory store $mem has an unresolved conflict; run /gitlore:resolve" >&2
+        exit 1
+      fi
+      # The release commit stages the store's checkout below, so that checkout
+      # must not sit behind (or beside) the pointer already recorded: the store
+      # does not move when the parent's HEAD does, and staging it then would
+      # walk the pointer back. Not checked out: nothing will be staged.
+      if [ -e "$top/$mem/.git" ]; then
+        recorded=$(git rev-parse -q --verify ":$mem")
+        current=$(git -C "$top/$mem" rev-parse HEAD)
+        if [ "$current" != "$recorded" ] \
+          && ! git -C "$top/$mem" merge-base --is-ancestor "$recorded" "$current"; then
+          echo "error: memory store $mem is checked out at ${current:0:12}, not at or after the recorded pointer ${recorded:0:12}; run git submodule update -- $mem, or /gitlore:merge" >&2
+          exit 1
+        fi
+      fi
+    fi
+    git diff --quiet HEAD -- "${guard[@]}" || { echo "error: uncommitted changes" >&2; exit 1; }
     branch=$(git symbolic-ref -q --short HEAD || echo "")
     [ "$branch" = "$main_branch" ] || { echo "error: must be on $main_branch (currently $branch)" >&2; exit 1; }
 
@@ -105,6 +138,12 @@ release bump='patch' yes='': precommit
       tmp=$(mktemp); jq --arg v "$new_version" '.version = $v' "$m" > "$tmp"; mv "$tmp" "$m"
       git add "$m"
     done
+    # A store pointer gitlore failed to stage, or one unstaged by hand, would
+    # otherwise float past the release; staging it is a no-op when it is
+    # already staged or the store is not checked out.
+    if [ -n "$mem" ]; then
+      git add -- ":(top)$mem"
+    fi
     git commit -m "release: $new_version"
     git tag -a "$tag" -m "Release $new_version"
     git push "$remote" "$main_branch"

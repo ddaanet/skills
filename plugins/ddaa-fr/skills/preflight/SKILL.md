@@ -28,26 +28,45 @@ git status --porcelain
 git fetch --dry-run 2>&1
 git log @{u}..HEAD --oneline 2>/dev/null
 git submodule status 2>/dev/null
-git config -f .gitmodules --get submodule.gitlore-memory.path 2>/dev/null
+git config -f "$(git rev-parse --show-toplevel)/.gitmodules" \
+  --get submodule.gitlore-memory.path 2>/dev/null
 ```
 
 La dernière sonde donne le chemin de la mémoire gitlore, si le dépôt en
-monte une. Ce chemin-là, et lui seul, échappe aux deux règles de propreté
-ci-dessous : la mémoire reste modifiée entre deux commits du parent, c'est
-voulu, et le prochain commit du parent -- celui de la release compris --
-l'enregistre. Écarter sa ligne de `git status --porcelain` et de
-`git submodule status`, puis juger le reste normalement. Tout autre chemin
-compte, autres sous-modules compris. Sortie vide : aucune exception.
+monte une. Sortie vide : aucune exception, tout se juge.
+
+Ce chemin-là, et lui seul, échappe aux deux règles de propreté ci-dessous
+tant qu'il est simplement modifié : ` M`, `M ` ou `MM` dans
+`git status --porcelain`, `+` ou aucun préfixe dans `git submodule status`.
+Entre deux commits, la mémoire s'écarte du HEAD du parent, c'est voulu :
+gitlore la commite de son côté et indexe son pointeur déplacé, que le
+prochain commit du parent enregistre. Écarter ces lignes, puis juger le
+reste normalement. Tout autre chemin compte, autres sous-modules compris.
+
+Une mémoire en conflit, elle, n'y échappe pas : un code non fusionné
+(`UU`, `AA`, `DU`...) dans le porcelain ou un préfixe `U` dans le statut
+des sous-modules met l'arbre propre en échec, et le remède est
+`/gitlore:resolve`.
+
+Pas davantage une mémoire extraite en retrait ou à côté du pointeur
+enregistré, qui affiche elle aussi `+` : la commiter ferait reculer le
+pointeur. Sur un `+`, lancer depuis la racine
+`git -C <chemin> merge-base --is-ancestor "$(git rev-parse :<chemin>)" HEAD`.
+Code non nul : échec de l'arbre propre, à corriger par
+`git submodule update -- <chemin>` ou `/gitlore:merge`.
+
+L'exception ne tient que si la recette de release la fait aussi. Quand la
+mémoire est modifiée et que la recette du projet refuse tout arbre sale
+sans écarter ce chemin, la release refusera ce que preflight a laissé
+passer : signaler un ÉCHEC d'arbre propre, avec pour correction d'écarter
+le chemin dans la recette.
 
 | Vérification | Règle |
 |--------------|-------|
 | Branche | `main` ou `master` obligatoire. Sinon, arrêt. |
-| Arbre de travail | Doit être propre, hors mémoire. Sinon, arrêt. |
+| Arbre de travail | Doit être propre, mémoire simplement modifiée exceptée. Sinon, arrêt. |
 | Synchro remote | Pas de commits non poussés/tirés. Avertissement si divergence. |
-| Sous-modules | Pas de modifications non commitées, hors mémoire. Sinon, arrêt. |
-
-Si la mémoire était modifiée, le mentionner dans le rapport, sous le
-tableau, à titre d'information -- ni ok, ni échec.
+| Sous-modules | Pas de modifications non commitées, mémoire simplement modifiée exceptée. Sinon, arrêt. |
 
 ## Étape 2 : Vérifier les tâches en attente
 
@@ -104,7 +123,9 @@ Deux audiences :
 - Index mémoire : vérifier la cohérence des entrées
 
 Commiter les modifications de documentation avant de passer au rapport.
-La recette de release attend un arbre propre.
+La recette de release attend un arbre propre, mémoire exceptée : la
+laisser au commit qui enregistrera son pointeur, et ne rien commiter
+dedans.
 
 ## Étape 5 : Évaluer la portée de la release
 
@@ -154,7 +175,7 @@ le signaler.
 | Tâches en attente   | ok/attention (N en attente) |
 | Documentation       | ok/mise à jour (N fichiers) |
 
-**Mémoire :** `<chemin>` modifiée, laissée au prochain commit   # seulement si modifiée
+**Mémoire :** `<chemin>` modifiée, laissée au prochain commit
 
 **Version courante :** X.Y.Z
 **Commits depuis la dernière release :** N
@@ -167,6 +188,9 @@ le signaler.
   `just release minor`     # mineure
   `just release major`     # majeure
 ```
+
+La ligne **Mémoire** n'apparaît que si l'étape 1 a exempté une mémoire
+modifiée. Elle informe : ni ok, ni échec.
 
 Si un ÉCHEC : lister chaque problème avec des instructions de correction.
 Arrêt.

@@ -42,35 +42,62 @@ The skill auto-detects project characteristics rather than assuming paths:
 | Pending tasks | `TODO.md` / `agents/session.md` / taskfile patterns |
 | Style corpus | `tmp/STYLE_CORPUS` > `STYLE_CORPUS.md` > bundled default |
 | Git remote | `origin` > first remote found |
-| gitlore memory store | `git config -f .gitmodules --get submodule.gitlore-memory.path` |
+| gitlore memory store | `git config -f "$(git rev-parse --show-toplevel)/.gitmodules" --get submodule.gitlore-memory.path` |
 
 ## Clean-Tree Exemption: the gitlore Memory Store
 
 Branch, clean tree and submodules are hard blockers, with exactly one
-carve-out: the gitlore memory submodule. In a repo that mounts gitlore,
-` M memory` is the resting state, not unfinished work -- nobody commits
-inside the store; the parent's pre-commit hook gates it and stages the
-moved gitlink into the next parent commit, the release commit included.
-Without the carve-out preflight cannot pass in such a repo without a
-hand-made commit the release was about to make anyway.
+carve-out: the gitlore memory submodule. In a repo that mounts gitlore the
+store differs from the parent's HEAD between commits by design, not as
+unfinished work. Nobody runs `git commit` inside it: gitlore commits it
+through its approval gate and stages the moved pointer in the parent
+index, and whatever parent commit comes next records that pointer, the
+release commit included. Without the carve-out preflight cannot pass in
+such a repo without a hand-made commit the release was about to make
+anyway.
 
 - **One path, detected.** The path comes from the submodule's stable
-  registered name (`gitlore-memory`), never a hardcoded `memory`. Empty
-  output means no store and no exemption. Every other path -- untracked
-  files, other dirty submodules -- remains a finding; a gate that waved
-  those through would be broken the other way.
-- **Reported, not dropped.** A dirty store appears in the report as
-  information, outside the pass/FAIL table: neither silent nor counted as
-  a pass.
+  registered name (`gitlore-memory`), read from the top-level
+  `.gitmodules` so the probe does not depend on the working directory --
+  never a hardcoded `memory`. Empty output means no store and no
+  exemption. Every other path -- untracked files, other dirty
+  submodules -- remains a finding; a gate that waved those through would
+  be broken the other way.
+- **Modified only, not conflicted.** The exemption covers the store's
+  modified states (` M`, `M `, `MM` in porcelain; `+` or none in
+  submodule status) -- `M ` included, since a staged pointer is what
+  gitlore's own commit leaves behind. An unmerged store (`UU`, `AA` ...;
+  `U` in submodule status) still fails and points at `/gitlore:resolve`:
+  a conflict is unfinished work, and committing over it would record an
+  arbitrary side. A checkout behind or beside the recorded pointer shows
+  the same `+` but also fails: the store does not move when the parent's
+  HEAD does, so after a parent pull or reset the checkout can trail the
+  pointer, and committing it would walk the pointer back. Only a
+  checkout at or descending from the recorded pointer is exempt.
+- **Reported, not dropped.** A modified store appears in the report as
+  information, outside the pass/FAIL table: neither silent nor counted
+  as a pass.
+- **The release recipe must agree.** Preflight passing a modified store
+  is only useful if the release then accepts it. A project whose recipe
+  refuses any dirty tree has to exclude the same path, and preflight
+  reports the mismatch as a clean-tree FAIL rather than pass a release
+  that will abort. This repo's `justfile` does so: its `release` guard
+  reads the path the same way, runs `git diff --quiet HEAD` with that
+  path excluded, refuses an unmerged store or one checked out behind or
+  beside its recorded pointer, and `git add`s the store path before the
+  release commit -- a no-op when gitlore already staged
+  the pointer, and the catch for a pointer whose staging was skipped or
+  undone. `git commit` without a pathspec then records it alongside the
+  manifests.
 - **Not a project-specific check.** The rule is universal and inert where
   gitlore is absent, so it does not breach the same-gate-everywhere
   constraint.
 
 Rejected: requiring the store to be committed before passing (the real
-precondition -- a fresh approved summary before the next parent commit --
-is a commit-time rule gitlore's own hook already enforces, at the right
-moment); relaxing the submodule rule in general (only the memory store is
-dirty between commits by design).
+precondition -- an approved summary before the store's next commit -- is
+gitlore's own gate, enforced at the moment it matters, not a
+release-readiness verdict); relaxing the submodule rule in general (only
+the memory store differs from HEAD between commits by design).
 
 ## Documentation Audit Scope
 
