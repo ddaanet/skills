@@ -1,3 +1,3 @@
 ## Current task
 
-Nothing in flight. The remaining work is three plans in docs/plans/, tracked in the todo file. Start with the handoff provider rename to autodrive-handoff together with dropping "lightweight"/"léger", since both plans touch the same sentences. Its plugin.json descriptions only reach users after a release, and the marketplace copies of those two descriptions are updated after that release. The skill-creator eval loop over proof/relecture stays abandoned by design: do not restart it.
+Nothing in flight. All three plans in docs/plans/ are done, reviewed and shipped in 0.6.0, the marketplace descriptions and README are synced, and memory is published. What remains is three follow-ups raised during review, none yet accepted by the user: they sit as open decisions in the todo file. Next step: ask the user which, if any, to take on; do not start one unasked.
