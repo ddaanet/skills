@@ -17,18 +17,52 @@ produce a go/no-go readiness report before release. The report is the
 deliverable; whether the release command then runs is a separate decision.
 
 **Execution model:** Both models are legitimate. A human may read the report
-and run the release afterwards, or the same agent may run it -- but only when
-the request that reached it already asked for a release. The skill never
-infers authorization from a passing report alone, which keeps report-and-stop
-the default: preflight is often invoked precisely to *ask* whether a release
-is possible, and a release is hard to reverse (tag, GitHub release, and a
-marketplace push in a second repo).
+and run the release afterwards, or the same agent may run it -- but only on a
+request in the user's own words naming the release and its bump. The skill
+never infers authorization from a passing report alone, which keeps
+report-and-stop the default: preflight is often invoked precisely to *ask*
+whether a release is possible, and a release is hard to reverse (tag, GitHub
+release, and a marketplace push in a second repo). See **Release Approval**.
 
 **Non-goals:**
 - Bumping versions (out of scope, release tooling does this)
 - Releasing on the skill's own initiative (authorization comes from the
   request, never from a passing report)
 - Managing changelogs (separate concern)
+
+## Release Approval
+
+Preflight ends immediately before a release, so whatever approval it collects
+is the approval the release command will be judged on. In Claude Code the
+auto-mode classifier gates an outward-facing command on whether a user prompt
+requested that action, not on the command string: a release recipe is not
+blocked as such, but an agent-authored proposal answered by `ok` carries no
+request, and neither does an opening prompt asking for something adjacent --
+the readiness pass is exactly what precedes a release without being one.
+Observed: a green report, the agent offering `patch` or `minor`, the user
+replying `ok`, and `just release patch` denied before anything executed; the
+user then ran the same recipe and it landed whole.
+
+- **The answer must name the action.** A passing run ends in one of three
+  ways: the release runs because the request already named it and its bump;
+  the report closes by asking the user to reply with the bump, so the reply
+  is the request; or the agent prints the command for the user to run. The
+  agent never picks, recommends or proposes a bump -- each turns the user's
+  reply back into a confirmation of the agent's words.
+- **A request without a bump still asks.** "Release" alone does not run
+  `just release` on its default: a default chosen by omission is still a
+  bump the agent picked. This costs a fully non-interactive caller one stop,
+  accepted because the bump is the one decision the release cannot infer.
+- **The fallback is the user's own command.** When the reply names no bump,
+  the command is denied, or the agent cannot run it in this environment, it
+  prints the exact command -- in Claude Code prefixed with `!`, so the output
+  lands in the conversation and the agent can diagnose from it -- and stops.
+
+Rejected: decomposing the recipe into its `git` / `gh` steps to route around
+a denial (a release is one atomic sequence; run by hand it ends half-landed,
+version commit and tag public with the GitHub release or marketplace bump
+missing -- a dirty stop manufactured to dodge a clean one); re-asking for confirmation (a second agent-authored question has the
+provenance defect of the first).
 
 ## Detection Strategy
 

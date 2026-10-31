@@ -188,22 +188,33 @@ store. It is information, neither a pass nor a failure.
 
 If any FAIL: list each failure with specific fix instructions. Stop.
 
-If all pass: confirm ready and show the release command.
+If all pass: confirm ready, show the release command, and continue with
+**After the report**.
 
 ## After the report
 
 - FAIL checks: stop, wait for human to fix
-- All pass, and the request did not ask for a release: report and stop
-- All pass, and the request already asked for one: report, then run the
-  release command
+- All pass, and the request named both the release and its bump
+  (`patch`, `minor`, `major`): report, then run the release command with
+  that bump
+- All pass otherwise: end the report by asking the user to reply with
+  the bump they want cut, then stop. Do not pick a bump, recommend one,
+  or offer to proceed
+- The reply names a bump: run the release command with it
+- The reply names none (`ok`, `yes`), the release command is denied, or
+  it cannot run here: print the exact command for the user to run --
+  in Claude Code prefixed with `!`, as in `! just release minor` -- and
+  stop. Diagnose from its output once it lands. Never retry the command
+  or run its steps one by one
 - Do NOT invoke other skills
-- A passing report is never authorization on its own
 
 ## Constraints
 
-- **Never release on your own initiative.** A passing report is not
-  authorization. Run the release command only when the request that
-  reached you already asked for it; otherwise report and stop.
+- **Never release on your own initiative.** Neither a passing report
+  nor a yes to your own question is authorization, and neither is a
+  request for something adjacent such as the readiness pass itself. Run
+  the release command only on the user's own words naming the release
+  and its bump; otherwise ask for the bump, or print the command.
 - **Abort on hard failures.** Branch, clean-tree, quality checks are
   blockers. Stop and enumerate fixes.
 - **Warn on soft issues.** Pending tasks, missing check runner, remote

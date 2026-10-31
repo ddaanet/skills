@@ -195,22 +195,36 @@ modifiée. Elle informe : ni ok, ni échec.
 Si un ÉCHEC : lister chaque problème avec des instructions de correction.
 Arrêt.
 
-Si tout est ok : confirmer la conformité et afficher la commande de release.
+Si tout est ok : confirmer la conformité, afficher la commande de release,
+puis passer à **Après le rapport**.
 
 ## Après le rapport
 
 - Checks en échec : arrêt, l'humain corrige
-- Tout ok, et la demande ne réclamait pas de release : rapport, puis arrêt
-- Tout ok, et la demande réclamait déjà une release : rapport, puis lancer
-  la commande de release
+- Tout ok, et la demande nommait la release et son niveau (`patch`,
+  `minor`, `major`) : rapport, puis lancer la commande de release à ce
+  niveau
+- Tout ok dans les autres cas : clore le rapport en demandant à
+  l'utilisateur de répondre par le niveau à publier, puis s'arrêter. Ne
+  pas choisir le niveau, ne pas en recommander un, ne pas proposer de
+  continuer
+- La réponse nomme un niveau : lancer la commande de release avec
+- La réponse n'en nomme aucun (`ok`, `oui`), la commande est refusée, ou
+  elle ne peut pas tourner ici : afficher la commande exacte pour que
+  l'utilisateur la lance lui-même -- sous Claude Code préfixée de `!`,
+  par exemple `! just release minor` -- et s'arrêter. Diagnostiquer
+  d'après sa sortie quand elle arrive. Ne jamais relancer la commande ni
+  en exécuter les étapes une à une
 - Ne PAS invoquer d'autres skills
-- Un rapport tout-ok ne vaut jamais autorisation à lui seul
 
 ## Contraintes
 
-- **Ne jamais releaser de sa propre initiative.** Un rapport tout-ok ne
-  vaut pas autorisation. Ne lancer la commande de release que si la demande
-  reçue la réclamait déjà ; sinon, rapporter et s'arrêter.
+- **Ne jamais releaser de sa propre initiative.** Ni un rapport tout-ok,
+  ni un oui à sa propre question, ni une demande voisine -- la passe de
+  conformité elle-même, par exemple -- ne valent autorisation. Ne lancer
+  la commande de release que sur les mots de l'utilisateur, qui nomment
+  la release et son niveau ; sinon, demander le niveau, ou afficher la
+  commande.
 - **Arrêt sur échec dur.** Branche, arbre propre, checks qualité sont
   des blocages. Arrêter et énumérer les corrections.
 - **Avertissement sur problèmes souples.** Tâches en attente, runner
