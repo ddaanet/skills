@@ -13,7 +13,8 @@
   sous-dossiers de `plugins/`, auto-découverte `skills/*/SKILL.md` dans
   chacun. Le repo racine n'est plus lui-même un plugin. Le handoff résumé
   vit dans son propre plugin pour être un choix par projet, mutuellement
-  exclusif avec le plugin `handoff` léger (n'en activer qu'un).
+  exclusif avec le plugin `autodrive-handoff`, instantané local de tâche
+  (n'en activer qu'un).
 - **Distribution claude.ai :** `build.sh` réécrit les noms avec suffixe
   `-en` / `-fr` dans les archives `.skill` pour désambiguïser le
   namespace plat de claude.ai. Exception : `handoff` / `passation` ont
@@ -77,7 +78,7 @@ build.sh
 | proof | proof (EN), relecture (FR) | ddaa, ddaa-fr | Relecture structurée élément-par-élément |
 | bilingual-skill-creator | bilingual-skill-creator | ddaa | Créer un skill en deux langues |
 | bookkeeping | bookkeeping (EN), saisie-comptable (FR) | ddaa, ddaa-fr | Intégrer relevés bancaires dans grand-livre CSV |
-| handoff | handoff (EN), passation (FR) | ddaa-handoff, ddaa-passation | Résumé de fin de session (utile en projet hybride Claude Code + claude.ai) ; plugin séparé, choix par projet exclusif avec le plugin `handoff` léger |
+| handoff | handoff (EN), passation (FR) | ddaa-handoff, ddaa-passation | Résumé de fin de session (utile en projet hybride Claude Code + claude.ai) ; plugin séparé, choix par projet exclusif avec le plugin `autodrive-handoff` |
 
 ## Lignée
 

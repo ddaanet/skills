@@ -28,8 +28,10 @@ A given Claude Code project installs one language plugin, not both.
 
 `handoff` / `passation` live in their own plugins so each project decides
 separately. They are most useful in hybrid projects where Claude Code
-cooperates with claude.ai. For code-only work, the lightweight `handoff`
-plugin covers the same ground — enable one or the other, not both.
+cooperates with claude.ai. For code-only work, the `autodrive-handoff`
+plugin — a local task snapshot rather than a full session summary — covers
+the same ground. Enable one or the other, not both: each ships a skill
+named `handoff`, and their triggers overlap.
 
 ## Why bilingual pairs?
 
@@ -131,8 +133,10 @@ Un projet Claude Code donné installe un plugin de langue, pas les deux.
 `handoff` / `passation` vivent dans leurs propres plugins pour que chaque
 projet tranche séparément. Ils sont surtout utiles dans les projets
 hybrides où Claude Code coopère avec claude.ai. Pour du travail purement
-code, le plugin `handoff` léger couvre le même besoin — n'en activer
-qu'un.
+code, le plugin `autodrive-handoff` suffit : il garde un instantané local
+de la tâche en cours au lieu de rédiger un résumé complet de la session.
+N'en activer qu'un — les deux fournissent un skill `handoff` aux
+déclencheurs qui se recouvrent.
 
 ## Pourquoi des paires bilingues ?
 
