@@ -1,6 +1,6 @@
 {
   "name": "ddaa-passation",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Passation résumé de session (FR) — résumé de fin de session pour continuer dans un nouveau chat, livré sur Notion quand c'est disponible. Activer celui-ci OU le plugin autodrive-handoff (instantané local de la tâche), pas les deux.",
   "author": {
     "name": "David Allouche",
