@@ -1,7 +1,7 @@
-# Release tooling for the skills monorepo (ddaa + ddaa-fr, lockstep).
+# Release tooling for the skills monorepo (four plugins, lockstep).
 #
 # Adapted from claude-plugin-dev's release.just for this repo's shape:
-# two subdir plugins sharing one version, a single repo tag vX.Y.Z, the
+# several subdir plugins sharing one version, a single repo tag vX.Y.Z, the
 # `github` remote, and `git-subdir` marketplace entries. Deliberately NOT
 # vendored via git-subtree — a single repo is not enough occurrences to
 # justify generalizing the toolkit (the toolkit assumes one root manifest,
@@ -18,7 +18,7 @@ marketplace_dir := env_var_or_default("MARKETPLACE_DIR", justfile_directory() / 
 # Plugins versioned in lockstep. Manifest: plugins/<name>/.claude-plugin/plugin.json
 plugins := "ddaa ddaa-fr ddaa-handoff ddaa-passation"
 
-# Build all skills and validate both manifests; `release` depends on this.
+# Build all skills and validate every manifest; `release` depends on this.
 precommit:
     bash build.sh > /dev/null
     jq . plugins/ddaa/.claude-plugin/plugin.json > /dev/null
@@ -26,13 +26,13 @@ precommit:
     jq . plugins/ddaa-handoff/.claude-plugin/plugin.json > /dev/null
     jq . plugins/ddaa-passation/.claude-plugin/plugin.json > /dev/null
 
-# Validate state, bump both manifests to the same new version, commit, tag
-# vX.Y.Z, push main + tag, create a GitHub release, then bump both
-# marketplace entries and push that repo. A release without the marketplace
+# Validate state, bump every manifest to the same new version, commit, tag
+# vX.Y.Z, push main + tag, create a GitHub release carrying the dist/*.skill
+# archives for claude.ai users, then bump every matching marketplace entry and push that repo. A release without the marketplace
 # bump is invisible to end-users, so the two are coupled here. Pass `--yes`
 # as the second arg to skip the confirmation prompt.
 
-# Release both plugins in lockstep (bump, tag, GitHub release, marketplace).
+# Release all plugins in lockstep (bump, tag, GitHub release, marketplace).
 release bump='patch' yes='': precommit
     #!/usr/bin/env bash
     set -euo pipefail
@@ -46,7 +46,7 @@ release bump='patch' yes='': precommit
     branch=$(git symbolic-ref -q --short HEAD || echo "")
     [ "$branch" = "$main_branch" ] || { echo "error: must be on $main_branch (currently $branch)" >&2; exit 1; }
 
-    # --- lockstep invariant: both manifests carry the same version ---
+    # --- lockstep invariant: every manifest carry the same version ---
     versions=()
     for p in "${plugins[@]}"; do
       versions+=("$(jq -r .version "plugins/$p/.claude-plugin/plugin.json")")
@@ -77,6 +77,12 @@ release bump='patch' yes='': precommit
     git -C "$marketplace_dir" diff --quiet HEAD \
       || { echo "error: $marketplace_dir has uncommitted changes" >&2; exit 1; }
 
+    # --- release assets: precommit's build.sh just rebuilt dist/ ---
+    shopt -s nullglob
+    assets=(dist/*.skill)
+    shopt -u nullglob
+    [ "${#assets[@]}" -gt 0 ] || { echo "error: no dist/*.skill archives to attach" >&2; exit 1; }
+
     # --- compute new version ---
     new_version=$(jq -rn --arg v "$version" --arg bump "{{bump}}" '
       ($v | split(".") | map(tonumber)) as [$maj,$min,$pat]
@@ -103,9 +109,9 @@ release bump='patch' yes='': precommit
     git tag -a "$tag" -m "Release $new_version"
     git push "$remote" "$main_branch"
     git push "$remote" "$tag"
-    gh release create "$tag" --title "Release $new_version" --generate-notes
+    gh release create "$tag" --title "Release $new_version" --generate-notes "${assets[@]}"
 
-    # --- bump both marketplace entries, commit, push ---
+    # --- bump every marketplace entry, commit, push ---
     names_json=$(printf '%s\n' "${plugins[@]}" | jq -R . | jq -s .)
     tmp=$(mktemp)
     jq --argjson names "$names_json" --arg v "$new_version" '
@@ -119,7 +125,7 @@ release bump='patch' yes='': precommit
     if git -C "$marketplace_dir" diff --cached --quiet; then
       echo "Release $tag complete (marketplace already at $new_version)"
     else
-      git -C "$marketplace_dir" commit -m "release: ddaa/ddaa-fr $new_version"
+      git -C "$marketplace_dir" commit -m "release: $(IFS=/; echo "${plugins[*]}") $new_version"
       git -C "$marketplace_dir" push
       echo "Release $tag complete (marketplace bumped to $new_version)"
     fi

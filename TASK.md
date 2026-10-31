@@ -1,5 +1,3 @@
 ## Current task
 
-Nothing in flight. What is left is release plumbing, tracked in the todo file.
-
-The skill-creator eval loop over `proof`/`relecture` remains abandoned by design: its premise is closed by construction, since edits apply by string match and line numbers are never an input. Do not restart it.
+Nothing in flight. The remaining work is three plans in docs/plans/, tracked in the todo file. Start with the handoff provider rename to autodrive-handoff together with dropping "lightweight"/"léger", since both plans touch the same sentences. Its plugin.json descriptions only reach users after a release, and the marketplace copies of those two descriptions are updated after that release. The skill-creator eval loop over proof/relecture stays abandoned by design: do not restart it.
