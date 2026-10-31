@@ -18,7 +18,7 @@ deliverable; whether the release command then runs is a separate decision.
 
 **Execution model:** Both models are legitimate. A human may read the report
 and run the release afterwards, or the same agent may run it -- but only on a
-request in the user's own words naming the release and its bump. The skill
+request in the user's own words for the release and its argument. The skill
 never infers authorization from a passing report alone, which keeps
 report-and-stop the default: preflight is often invoked precisely to *ask*
 whether a release is possible, and a release is hard to reverse (tag, GitHub
@@ -44,25 +44,46 @@ replying `ok`, and `just release patch` denied before anything executed; the
 user then ran the same recipe and it landed whole.
 
 - **The answer must name the action.** A passing run ends in one of three
-  ways: the release runs because the request already named it and its bump;
-  the report closes by asking the user to reply with the bump, so the reply
-  is the request; or the agent prints the command for the user to run. The
-  agent never picks, recommends or proposes a bump -- each turns the user's
-  reply back into a confirmation of the agent's words.
-- **A request without a bump still asks.** "Release" alone does not run
-  `just release` on its default: a default chosen by omission is still a
-  bump the agent picked. This costs a fully non-interactive caller one stop,
-  accepted because the bump is the one decision the release cannot infer.
-- **The fallback is the user's own command.** When the reply names no bump,
-  the command is denied, or the agent cannot run it in this environment, it
-  prints the exact command -- in Claude Code prefixed with `!`, so the output
-  lands in the conversation and the agent can diagnose from it -- and stops.
+  ways: the release runs because the request already asked for it and gave
+  its argument; the report closes by asking the user for the argument, so
+  the reply is the request; or the agent prints the command for the user to
+  run. The agent never picks, recommends or proposes an argument -- each
+  turns the user's reply back into a confirmation of the agent's words, and
+  the passing report lists no command or default to echo back.
+- **The argument is whatever the release takes.** Preflight is
+  project-agnostic: the argument may be a bump level, an explicit version,
+  or nothing. A release that takes nothing needs only the user asking for
+  it.
+- **A bare argument is a request.** A reply of just `minor` to the question
+  counts: the user typed the argument, and the question supplies the
+  release. What does not count is assent to words the agent wrote (`ok`,
+  `yes`).
+- **A request without the argument still asks.** "Release" alone does not
+  run `just release` on its default: a default chosen by omission is still
+  a bump the agent picked. This costs a fully non-interactive caller one
+  stop, accepted because the argument is the one decision the release
+  cannot infer.
+- **The user's words are the confirmation.** A recipe that prompts before
+  publishing (`[y/N]` in this repo's `justfile`) hits EOF when the agent
+  runs it, or through `!`, and exits without releasing. Both the run and
+  the printed command therefore pass its non-interactive flag
+  (`just release minor --yes`); the prompt would only re-ask what the
+  user's words already settled.
+- **The fallback is the user's own command.** When the reply gives no
+  argument, the command is denied, or the agent cannot run it in this
+  environment, it prints the exact command -- in Claude Code prefixed with
+  `!`, so the output lands in the conversation and the agent can diagnose
+  from it -- and stops.
 
-Rejected: decomposing the recipe into its `git` / `gh` steps to route around
-a denial (a release is one atomic sequence; run by hand it ends half-landed,
-version commit and tag public with the GitHub release or marketplace bump
-missing -- a dirty stop manufactured to dodge a clean one); re-asking for confirmation (a second agent-authored question has the
-provenance defect of the first).
+Rejected:
+
+- **Running the recipe's `git` / `gh` steps by hand to route around a
+  denial.** A release is one atomic sequence; run step by step it ends
+  half-landed, version commit and tag public with the GitHub release or
+  marketplace bump missing -- a dirty stop manufactured to dodge a clean
+  one.
+- **Asking for confirmation again.** A second agent-authored question has
+  the provenance defect of the first.
 
 ## Detection Strategy
 

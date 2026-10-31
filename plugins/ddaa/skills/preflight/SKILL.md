@@ -153,7 +153,9 @@ just --list 2>/dev/null | grep -i release
 ```
 
 If a `release` recipe exists, that is the release command. If not, note
-its absence.
+its absence. Read the recipe for what it takes -- a bump level, an
+explicit version, or nothing -- and for the flag that skips its
+confirmation prompt, if it has one (`--yes`).
 
 ## Step 7: Readiness report
 
@@ -176,11 +178,6 @@ its absence.
 **Key changes:**
 - change summary 1
 - change summary 2
-
-**Release command:**
-  `just release`           # patch bump (default)
-  `just release minor`     # minor bump
-  `just release major`     # major bump
 ```
 
 Include the **Memory store** line only when Step 1 exempted a modified
@@ -188,24 +185,27 @@ store. It is information, neither a pass nor a failure.
 
 If any FAIL: list each failure with specific fix instructions. Stop.
 
-If all pass: confirm ready, show the release command, and continue with
-**After the report**.
+If all pass: confirm ready and continue with **After the report**.
 
 ## After the report
 
+The release argument is what the release command takes: a bump level,
+an explicit version, or nothing.
+
 - FAIL checks: stop, wait for human to fix
-- All pass, and the request named both the release and its bump
-  (`patch`, `minor`, `major`): report, then run the release command with
-  that bump
-- All pass otherwise: end the report by asking the user to reply with
-  the bump they want cut, then stop. Do not pick a bump, recommend one,
-  or offer to proceed
-- The reply names a bump: run the release command with it
-- The reply names none (`ok`, `yes`), the release command is denied, or
-  it cannot run here: print the exact command for the user to run --
-  in Claude Code prefixed with `!`, as in `! just release minor` -- and
-  stop. Diagnose from its output once it lands. Never retry the command
-  or run its steps one by one
+- All pass, and the user's words asked for the release and gave its
+  argument: report, then run the release command with that argument
+- All pass otherwise: end the report by asking the user for the release
+  argument -- or, when it takes none, to ask for the release -- then
+  stop. Do not pick an argument, recommend one, or offer to proceed
+- The reply gives it, even a bare `minor`: run the release command with it
+- The reply does not (`ok`, `yes`), the release command is denied, or it
+  cannot run here: print the exact command for the user to run -- in
+  Claude Code prefixed with `!`, as in `! just release minor --yes` --
+  and stop. Diagnose from its output once it lands. Never retry the
+  command or run its steps one by one
+- When the release command prompts for confirmation, pass its
+  non-interactive flag, both when running it and in the printed command
 - Do NOT invoke other skills
 
 ## Constraints
@@ -213,8 +213,9 @@ If all pass: confirm ready, show the release command, and continue with
 - **Never release on your own initiative.** Neither a passing report
   nor a yes to your own question is authorization, and neither is a
   request for something adjacent such as the readiness pass itself. Run
-  the release command only on the user's own words naming the release
-  and its bump; otherwise ask for the bump, or print the command.
+  the release command only when the user's own words asked for it --
+  in the request, or in a reply giving the argument you asked for;
+  otherwise ask for the argument, or print the command.
 - **Abort on hard failures.** Branch, clean-tree, quality checks are
   blockers. Stop and enumerate fixes.
 - **Warn on soft issues.** Pending tasks, missing check runner, remote

@@ -159,7 +159,9 @@ just --list 2>/dev/null | grep -i release
 ```
 
 Si une recette `release` existe, c'est la commande à utiliser. Sinon,
-le signaler.
+le signaler. Lire dans la recette ce qu'elle attend -- un niveau de
+version, une version explicite, ou rien -- et l'option qui saute sa
+demande de confirmation, s'il y en a une (`--yes`).
 
 ## Étape 7 : Rapport de conformité
 
@@ -182,11 +184,6 @@ le signaler.
 **Changements principaux :**
 - résumé du changement 1
 - résumé du changement 2
-
-**Commande de release :**
-  `just release`           # patch (défaut)
-  `just release minor`     # mineure
-  `just release major`     # majeure
 ```
 
 La ligne **Mémoire** n'apparaît que si l'étape 1 a exempté une mémoire
@@ -195,26 +192,32 @@ modifiée. Elle informe : ni ok, ni échec.
 Si un ÉCHEC : lister chaque problème avec des instructions de correction.
 Arrêt.
 
-Si tout est ok : confirmer la conformité, afficher la commande de release,
-puis passer à **Après le rapport**.
+Si tout est ok : confirmer la conformité, puis passer à **Après le
+rapport**.
 
 ## Après le rapport
 
+L'argument de release est ce qu'attend la commande de release : un
+niveau de version, une version explicite, ou rien.
+
 - Checks en échec : arrêt, l'humain corrige
-- Tout ok, et la demande nommait la release et son niveau (`patch`,
-  `minor`, `major`) : rapport, puis lancer la commande de release à ce
-  niveau
+- Tout ok, et les mots de l'utilisateur demandaient la release et en
+  donnaient l'argument : rapport, puis lancer la commande de release
+  avec cet argument
 - Tout ok dans les autres cas : clore le rapport en demandant à
-  l'utilisateur de répondre par le niveau à publier, puis s'arrêter. Ne
-  pas choisir le niveau, ne pas en recommander un, ne pas proposer de
-  continuer
-- La réponse nomme un niveau : lancer la commande de release avec
-- La réponse n'en nomme aucun (`ok`, `oui`), la commande est refusée, ou
+  l'utilisateur l'argument de release -- ou, si elle n'en prend pas, de
+  demander la release -- puis s'arrêter. Ne pas choisir l'argument, ne
+  pas en recommander un, ne pas proposer de continuer
+- La réponse le donne, même un simple `minor` : lancer la commande de
+  release avec cet argument
+- La réponse ne le donne pas (`ok`, `oui`), la commande est refusée, ou
   elle ne peut pas tourner ici : afficher la commande exacte pour que
   l'utilisateur la lance lui-même -- sous Claude Code préfixée de `!`,
-  par exemple `! just release minor` -- et s'arrêter. Diagnostiquer
-  d'après sa sortie quand elle arrive. Ne jamais relancer la commande ni
-  en exécuter les étapes une à une
+  par exemple `! just release minor --yes` -- et s'arrêter.
+  Diagnostiquer d'après sa sortie quand elle arrive. Ne jamais relancer
+  la commande ni en exécuter les étapes une à une
+- Si la commande de release demande une confirmation, lui passer son
+  option non interactive, qu'on la lance ou qu'on l'affiche
 - Ne PAS invoquer d'autres skills
 
 ## Contraintes
@@ -222,8 +225,9 @@ puis passer à **Après le rapport**.
 - **Ne jamais releaser de sa propre initiative.** Ni un rapport tout-ok,
   ni un oui à sa propre question, ni une demande voisine -- la passe de
   conformité elle-même, par exemple -- ne valent autorisation. Ne lancer
-  la commande de release que sur les mots de l'utilisateur, qui nomment
-  la release et son niveau ; sinon, demander le niveau, ou afficher la
+  la commande de release que si les mots de l'utilisateur la
+  demandaient -- dans la demande, ou dans une réponse qui donne
+  l'argument demandé ; sinon, demander l'argument, ou afficher la
   commande.
 - **Arrêt sur échec dur.** Branche, arbre propre, checks qualité sont
   des blocages. Arrêter et énumérer les corrections.
