@@ -60,7 +60,7 @@ report a clean-tree FAIL whose fix is to exclude the path in the recipe.
 
 | Check | Rule |
 |-------|------|
-| Branch | Must be `main` or `master`. Abort otherwise. |
+| Branch | Must be `main`, `master` or `dev`. Abort otherwise. |
 | Working tree | Must be clean, a modified memory store aside. Abort if dirty. |
 | Remote sync | No unpushed/unpulled commits. Warn if diverged. |
 | Submodules | No uncommitted changes, a modified memory store aside. Abort if dirty. |

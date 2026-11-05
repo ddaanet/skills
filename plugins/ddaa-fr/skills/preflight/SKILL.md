@@ -63,7 +63,7 @@ le chemin dans la recette.
 
 | Vérification | Règle |
 |--------------|-------|
-| Branche | `main` ou `master` obligatoire. Sinon, arrêt. |
+| Branche | `main`, `master` ou `dev` obligatoire. Sinon, arrêt. |
 | Arbre de travail | Doit être propre, mémoire simplement modifiée exceptée. Sinon, arrêt. |
 | Synchro remote | Pas de commits non poussés/tirés. Avertissement si divergence. |
 | Sous-modules | Pas de modifications non commitées, mémoire simplement modifiée exceptée. Sinon, arrêt. |
